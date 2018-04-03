@@ -19,7 +19,7 @@ function advanced_input_ui()
              grounds)
 
     # Define scope
-    #=s = Scope()
+    s = Scope()
     s.dom = adv
 
     onimport(s, JSExpr.@js function ()
@@ -33,6 +33,6 @@ function advanced_input_ui()
                          $(s["source"])[] = el1.files[0].path
                          $(s["ground"])[] = el2.files[0].path
                  end)
-                end)=#
-    adv
+                end)
+    s
 end

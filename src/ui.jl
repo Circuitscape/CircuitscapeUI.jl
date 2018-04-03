@@ -36,15 +36,30 @@ function generate_ui(w)
     section1 = Node(:div, tachyons_css, "Data Type and Modelling Mode") |> 
                     class"f4 lh-title"
 
-    dt = get_data_type()
-    # dt["value"][] = "Raster"
-
-    mode = Observable{Any}("")
+    focal = Observable("")
+    source = Observable("")
+    ground = Observable("")
     points_input = Observable{Any}(Node(:div))
+
+    on(points_input) do x
+        on(x["focal"]) do y
+            focal[] = y
+        end
+        on(x["source"]) do z
+            source[] = z
+        end
+        on(x["ground"]) do v
+            ground[] = v
+        end
+    end
+    points_input[] = pairwise_input_ui()
+
+    # First drop down
+    dt = get_data_type()
+
 
     # Next drop down
     mod_mode = map(dt["value"]) do v
-        @show v
         points_input[] = pairwise_input_ui()
         if v == "Network"
             get_mod_mode_network()
@@ -56,17 +71,15 @@ function generate_ui(w)
     # Get the input raster/graph 
     input_section = Node(:div, tachyons_css, "Input Resistance Data") |> 
                     class"f4 lh-title"
-    input1, input2 = input_ui()
-    input = vbox(input1, 
-                 input2)
+    input = input_ui()
     
     input_graph = Observable("")
     is_res = Observable(false)
-    on(input1["filepath"]) do x
+    on(input["filepath"]) do x
         input_graph[] = x
     end
-    on(input2["check"]) do x
-           is_res[] = x
+    on(input["check"]) do x
+       is_res[] = x
     end
     
     # Focal points or advanced mode
@@ -84,24 +97,6 @@ function generate_ui(w)
         end
     end
     dt["value"][] = "Raster"
-
-    #=focal = Observable("")
-    source = Observable("")
-    ground = Observable("")
-    on(points_input) do x
-        on(x["focal"]) do y
-            focal[] = y
-            @show focal[]
-        end
-        on(x["source"]) do z
-            source[] = z
-            @show source[]
-        end
-        on(x["ground"]) do v
-            ground[] = v
-            @show ground[]
-        end
-    end=#
     
     # Output options
     write_cur_maps = Observable(false)

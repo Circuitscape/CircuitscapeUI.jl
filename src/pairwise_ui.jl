@@ -12,27 +12,24 @@ function input_ui()
                            :style => "margin-top: 12px; margin-right: 5px")), 
                         Node(:div, "Data represents resistances instead of conductances", 
                              attributes = Dict(:style => "margin-top: 12px")))
+    input = vbox(graph,
+                 graph_is_res)
 
 	# Get file path 
-	s1 = Scope()
-	s1.dom = graph
-	onimport(s1, JSExpr.@js function ()
-				@var el = this.dom.querySelector("#input")
-				el.onchange = (function ()
-				   $(s1["filepath"])[] = el.files[0].path
+	s = Scope()
+	s.dom = input
+	onimport(s, JSExpr.@js function ()
+				@var el1 = this.dom.querySelector("#input")
+				@var el2 = this.dom.querySelector("#check")
+				el1.onchange = (function ()
+				   $(s["filepath"])[] = el1.files[0].path
 				end)
+                el2.onchange = (function ()
+                    $(s["check"])[] = el2.checked
+                end)
 			end)
 
-	s2 = Scope()
-	s2.dom = graph_is_res
-	onimport(s2, JSExpr.@js function ()
-				    @var el = this.dom.querySelector("#check")	
-                    el.onchange = (function ()
-                        $(s2["check"])[] = el.checked
-                    end)
-                end)
-
-    s1, s2
+    s
 end
 
 function pairwise_input_ui()
@@ -44,15 +41,15 @@ function pairwise_input_ui()
     pair = vbox(additional_input, 
                  focal)
 
-    #=s = Scope()
+    s = Scope()
     s.dom = pair
     onimport(s, JSExpr.@js function ()
                  @var el = this.dom.querySelector("#focal")
                  el.onchange = (function ()
                      $(s["focal"])[] = el.files[0].path
                     end)
-             end)=#
+             end)
 
-    pair
+    s
 end
 
