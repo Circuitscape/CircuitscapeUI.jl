@@ -3,7 +3,9 @@ using WebIO
 using Tachyons
 using CSSUtil
 using JSExpr
+using Circuitscape
 
+include("utils.jl")
 include("pairwise_ui.jl")
 include("advanced_ui.jl")
 include("output_ui.jl")
@@ -26,6 +28,10 @@ function showsome(uis, which)
                  end
              end)
     s
+end
+
+
+function ui_logger(msg, typ)
 end
 
 function generate_ui(w)
@@ -124,9 +130,19 @@ function generate_ui(w)
        @show out[]
        @show write_cur_maps[]
        @show write_volt_maps[]
+       cfg = Dict{String,String}()
+       cfg["habitat_file"] = input_graph[]
+       cfg["habitat_map_is_resistances"] = string(is_res[])
+       cfg["point_file"] = focal[]
+       cfg["source_file"] = source[]
+       cfg["ground_file"] = ground[]
+       cfg["output_file"] = out[]
+       cfg["write_cur_maps"] = string(write_cur_maps[])
+       cfg["write_volt_maps"] = string(write_volt_maps[])
+       compute(cfg)
     end
-
-
+    
+    logging = log_window()
 
     page = vbox(heading, 
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
@@ -140,93 +156,15 @@ function generate_ui(w)
                 points_input,
                 hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 output,
-                run)|> class"pa3 system-sans-serif"
+                run,
+                logging)|> class"pa3 system-sans-serif"
 
     body!(w, page)
 
 end
 
-function get_data_type()
-
-    data_type_prompt = "Step 1: Choose your input data type: "
-
-    # Select between raster and network
-    data_type = vbox(Node(:div, data_type_prompt, 
-                          attributes = Dict(:style => "margin-top: 12px")) |> class"b",
-                 Node(:select, "Select Data Type", 
-                 Node(:option, "Raster"), 
-                 Node(:option, "Network"), id = "dt", 
-                 attributes = Dict(:style => "margin-top: 12px; margin-bottom: 12px")))
-
-    s = Scope()
-    s.dom = data_type
-    s["value"] = Observable("Raster")
-    onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#dt")
-                 el.onchange = (function ()
-                        $(s["value"])[] = el.value
-                    end)
-             end)
-
-    s
+function log_window()
+    Node(:input, "logging window", attributes = (:type => :text))
 end
 
-function get_mod_mode_network()
-    
-    mod_mode_prompt = "Step 2: Choose a Modelling Mode: "
-    mod_mode = vbox(Node(:div, mod_mode_prompt, 
-                          attributes = Dict(:style => "margin-top: 12px")) |> class"b",
-                 Node(:select, "Select Modelling Mode", 
-                 Node(:option, "Pairwise"), 
-                 Node(:option, "Advanced"), id = "modelling", 
-                 attributes = Dict(:style => "margin-top: 12px; margin-bottom: 12px")))
-
-    s = Scope()
-    s.dom = mod_mode
-    s["value"] = Observable("Pairwise")
-    onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#modelling")
-                 el.onchange = (function ()
-                        $(s["value"])[] = el.value
-                    end)
-             end)
-
-    s
-end
-
-function get_mod_mode_raster()
-    
-    mod_mode_prompt = "Step 2: Choose a Modelling Mode: "
-    mod_mode = vbox(Node(:div, mod_mode_prompt, 
-                          attributes = Dict(:style => "margin-top: 12px")) |> class"b",
-                 Node(:select, "Select Modelling Mode", 
-                 Node(:option, "Pairwise"), 
-                 Node(:option, "Advanced"), 
-                 Node(:option, "One To All "), 
-                 Node(:option, "All To One"), id = "modelling", 
-                 attributes = Dict(:style => "margin-top: 12px; margin-bottom: 12px")))
-
-    s = Scope()
-    s.dom = mod_mode
-    s["value"] = Observable("Pairwise")
-    onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#modelling")
-                 el.onchange = (function ()
-                        $(s["value"])[] = el.value
-                    end)
-             end)
-    s
-end
-function run_button()
-
-	ob = Observable(0)
-	s = Scope()
-	s["click"] = ob
-	cb = JSExpr.@js () -> $ob[] = $ob[] + 1
-	run = Node(:button, "Run", attributes = Dict(:style => "margin-top: 12px"),
-			events = Dict(:click => cb))
-	s.dom = run
-
-	s, ob
-end
 generate_ui(w)
