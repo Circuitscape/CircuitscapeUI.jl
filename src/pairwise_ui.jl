@@ -41,15 +41,15 @@ function pairwise_input_ui()
     pair = vbox(additional_input, 
                  focal)
 
-    #=s = Scope()
+    s = Scope()
     s.dom = pair
     onimport(s, JSExpr.@js function ()
                  @var el = this.dom.querySelector("#focal")
                  el.onchange = (function ()
                      $(s["focal"])[] = el.files[0].path
                     end)
-             end)=#
+             end)
 
-    pair
+    s
 end
 
