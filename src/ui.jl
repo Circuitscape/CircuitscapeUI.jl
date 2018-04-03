@@ -10,7 +10,27 @@ include("pairwise_ui.jl")
 include("advanced_ui.jl")
 include("output_ui.jl")
 
+function log_window()
+    lw = Node(:pre, "", id = "log", 
+              attributes = Dict(:style => "height: 200px; overflow: auto"))
+
+    s = Scope()
+    s.dom = lw
+    s["log"] = Observable("")
+    s["clear"] = Observable(rand())
+    onjs(s["log"], JSExpr.@js function (msg)
+             @var el = this.dom.querySelector("#log")
+             el.textContent += ("\n" + msg)
+         end)
+    onjs(s["clear"], JSExpr.@js function (msg)
+             @var el = this.dom.querySelector("#log")
+             el.textContent = ""
+         end)
+    s
+end
+
 w = Window()
+logging = log_window()
 
 function showsome(uis, which)
     s = Scope()
@@ -32,7 +52,10 @@ end
 
 
 function ui_logger(msg, typ)
+
+    logging["log"][] = msg
 end
+Circuitscape.ui_interface[] = ui_logger
 
 function generate_ui(w)
 
@@ -139,10 +162,11 @@ function generate_ui(w)
        cfg["output_file"] = out[]
        cfg["write_cur_maps"] = string(write_cur_maps[])
        cfg["write_volt_maps"] = string(write_volt_maps[])
+
+       logging["clear"][] = rand()
        compute(cfg)
     end
     
-    logging = log_window()
 
     page = vbox(heading, 
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
@@ -157,14 +181,12 @@ function generate_ui(w)
                 hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 output,
                 run,
+                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 logging)|> class"pa3 system-sans-serif"
 
     body!(w, page)
 
 end
 
-function log_window()
-    Node(:input, "logging window", attributes = (:type => :text))
-end
 
 generate_ui(w)
