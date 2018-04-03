@@ -57,7 +57,6 @@ function generate_ui(w)
     # First drop down
     dt = get_data_type()
 
-
     # Next drop down
     mod_mode = map(dt["value"]) do v
         points_input[] = pairwise_input_ui()
@@ -114,6 +113,21 @@ function generate_ui(w)
         out[] = x
     end
 
+    # Run button
+    run, ob = run_button()
+    on(ob) do x
+        @show input_graph[]
+        @show is_res[]
+       @show focal[]
+       @show source[]
+       @show ground[]
+       @show out[]
+       @show write_cur_maps[]
+       @show write_volt_maps[]
+    end
+
+
+
     page = vbox(heading, 
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
                 section1,
@@ -125,7 +139,8 @@ function generate_ui(w)
                 hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 points_input,
                 hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
-                output)|> class"pa3 system-sans-serif"
+                output,
+                run)|> class"pa3 system-sans-serif"
 
     body!(w, page)
 
@@ -201,5 +216,17 @@ function get_mod_mode_raster()
                     end)
              end)
     s
+end
+function run_button()
+
+	ob = Observable(0)
+	s = Scope()
+	s["click"] = ob
+	cb = JSExpr.@js () -> $ob[] = $ob[] + 1
+	run = Node(:button, "Run", attributes = Dict(:style => "margin-top: 12px"),
+			events = Dict(:click => cb))
+	s.dom = run
+
+	s, ob
 end
 generate_ui(w)
