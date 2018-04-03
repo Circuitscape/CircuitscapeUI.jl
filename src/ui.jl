@@ -44,7 +44,6 @@ function generate_ui(w)
 
     # Next drop down
     mod_mode = map(dt["value"]) do v
-        @show v
         points_input[] = pairwise_input_ui()
         if v == "Network"
             get_mod_mode_network()
@@ -56,17 +55,15 @@ function generate_ui(w)
     # Get the input raster/graph 
     input_section = Node(:div, tachyons_css, "Input Resistance Data") |> 
                     class"f4 lh-title"
-    input1, input2 = input_ui()
-    input = vbox(input1, 
-                 input2)
+    input = input_ui()
     
     input_graph = Observable("")
     is_res = Observable(false)
-    on(input1["filepath"]) do x
+    on(input["filepath"]) do x
         input_graph[] = x
     end
-    on(input2["check"]) do x
-           is_res[] = x
+    on(input["check"]) do x
+       is_res[] = x
     end
     
     # Focal points or advanced mode
@@ -84,6 +81,7 @@ function generate_ui(w)
         end
     end
     dt["value"][] = "Raster"
+    @show points_input[]
 
     #=focal = Observable("")
     source = Observable("")
