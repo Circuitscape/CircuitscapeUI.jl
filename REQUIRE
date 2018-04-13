@@ -1,1 +1,7 @@
 julia 0.6
+Circuitscape 5.0.0
+Blink 0.6.2
+WebIO 0.1.7
+CSSUtil
+JSExpr 0.1.1
+Tachyons 0.1.0
