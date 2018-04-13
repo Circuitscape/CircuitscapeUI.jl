@@ -23,8 +23,8 @@ function advanced_input_ui()
     s.dom = adv
 
     onimport(s, JSExpr.@js function ()
-                 @var el1 = this.dom.querySelector("#source")
-                 @var el2 = this.dom.querySelector("#ground")
+                 JSExpr.@var el1 = this.dom.querySelector("#source")
+                 JSExpr.@var el2 = this.dom.querySelector("#ground")
                  el1.onchange = (function ()
                          $(s["source"])[] = el1.files[0].path
                          $(s["ground"])[] = el2.files[0].path

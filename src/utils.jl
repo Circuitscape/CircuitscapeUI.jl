@@ -14,7 +14,7 @@ function get_data_type()
     s.dom = data_type
     s["value"] = Observable("Raster")
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#dt")
+                 JSExpr.@var el = this.dom.querySelector("#dt")
                  el.onchange = (function ()
                         $(s["value"])[] = el.value
                     end)
@@ -37,7 +37,7 @@ function get_mod_mode_network()
     s.dom = mod_mode
     s["value"] = Observable("Pairwise")
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#modelling")
+                 JSExpr.@var el = this.dom.querySelector("#modelling")
                  el.onchange = (function ()
                         $(s["value"])[] = el.value
                     end)
@@ -62,7 +62,7 @@ function get_mod_mode_raster()
     s.dom = mod_mode
     s["value"] = Observable("Pairwise")
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#modelling")
+                 JSExpr.@var el = this.dom.querySelector("#modelling")
                  el.onchange = (function ()
                         $(s["value"])[] = el.value
                     end)
@@ -81,3 +81,42 @@ function run_button()
 
 	s, ob
 end
+
+function log_window()
+    lw = Node(:pre, "", id = "log", 
+              attributes = Dict(:style => "height: 200px; overflow: auto"))
+
+    s = Scope()
+    s.dom = lw
+    s["log"] = Observable("")
+    s["clear"] = Observable(rand())
+    onjs(s["log"], JSExpr.@js function (msg)
+             JSExpr.@var el = this.dom.querySelector("#log")
+             el.textContent += ("\n" + msg)
+         end)
+    onjs(s["clear"], JSExpr.@js function (msg)
+             JSExpr.@var el = this.dom.querySelector("#log")
+             el.textContent = ""
+         end)
+    s
+end
+
+function showsome(uis, which)
+    s = Scope()
+    s["visible"] = which
+    s.dom = Node(:div, id="cont", uis...)
+    onjs(s["visible"], JSExpr.@js function (visbl)
+                 JSExpr.@var cont = this.dom.querySelector("cont")
+                 JSExpr.@var cs = cont.children
+                 for i = 1:cs.length
+                     if visbl.indexOf(i) >= 0
+                         cs[i].style.display = "block"
+                     else          
+                         cs[i].style.display = "none"
+                     end
+                 end
+             end)
+    s
+end
+
+

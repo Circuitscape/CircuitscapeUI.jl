@@ -19,8 +19,8 @@ function input_ui()
 	s = Scope()
 	s.dom = input
 	onimport(s, JSExpr.@js function ()
-				@var el1 = this.dom.querySelector("#input")
-				@var el2 = this.dom.querySelector("#check")
+				JSExpr.@var el1 = this.dom.querySelector("#input")
+				JSExpr.@var el2 = this.dom.querySelector("#check")
 				el1.onchange = (function ()
 				   $(s["filepath"])[] = el1.files[0].path
 				end)
@@ -44,7 +44,7 @@ function pairwise_input_ui()
     s = Scope()
     s.dom = pair
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#focal")
+                 JSExpr.@var el = this.dom.querySelector("#focal")
                  el.onchange = (function ()
                      $(s["focal"])[] = el.files[0].path
                     end)

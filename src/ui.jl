@@ -5,51 +5,8 @@ using CSSUtil
 using JSExpr
 using Circuitscape
 
-include("utils.jl")
-include("pairwise_ui.jl")
-include("advanced_ui.jl")
-include("output_ui.jl")
-
-function log_window()
-    lw = Node(:pre, "", id = "log", 
-              attributes = Dict(:style => "height: 200px; overflow: auto"))
-
-    s = Scope()
-    s.dom = lw
-    s["log"] = Observable("")
-    s["clear"] = Observable(rand())
-    onjs(s["log"], JSExpr.@js function (msg)
-             @var el = this.dom.querySelector("#log")
-             el.textContent += ("\n" + msg)
-         end)
-    onjs(s["clear"], JSExpr.@js function (msg)
-             @var el = this.dom.querySelector("#log")
-             el.textContent = ""
-         end)
-    s
-end
-
-w = Window()
-logging = log_window()
-
-function showsome(uis, which)
-    s = Scope()
-    s["visible"] = which
-    s.dom = Node(:div, id="cont", uis...)
-    onjs(s["visible"], JSExpr.@js function (visbl)
-                 @var cont = this.dom.querySelector("cont")
-                 @var cs = cont.children
-                 for i = 1:cs.length
-                     if visbl.indexOf(i) >= 0
-                         cs[i].style.display = "block"
-                     else          
-                         cs[i].style.display = "none"
-                     end
-                 end
-             end)
-    s
-end
-
+const w = Window()
+const logging = log_window()
 
 function ui_logger(msg, typ)
 
@@ -145,14 +102,6 @@ function generate_ui(w)
     # Run button
     run, ob = run_button()
     on(ob) do x
-        @show input_graph[]
-        @show is_res[]
-       @show focal[]
-       @show source[]
-       @show ground[]
-       @show out[]
-       @show write_cur_maps[]
-       @show write_volt_maps[]
        cfg = Dict{String,String}()
        cfg["habitat_file"] = input_graph[]
        cfg["habitat_map_is_resistances"] = string(is_res[])
@@ -187,6 +136,5 @@ function generate_ui(w)
     body!(w, page)
 
 end
-
 
 generate_ui(w)
