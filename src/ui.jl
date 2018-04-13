@@ -1,11 +1,5 @@
-using Blink
-using WebIO
-using Tachyons
-using CSSUtil
-using JSExpr
-using Circuitscape
+export run_ui
 
-const w = Window()
 const logging = log_window()
 
 function ui_logger(msg, typ)
@@ -137,4 +131,7 @@ function generate_ui(w)
 
 end
 
-generate_ui(w)
+function run_ui()
+    w = Window()
+    generate_ui(w)
+end
