@@ -19,17 +19,16 @@ function log_window()
     s["log"] = Observable("")
     s["clear"] = Observable(rand())
     onjs(s["log"], JSExpr.@js function (msg)
-             @var el = this.dom.querySelector("#log")
+             JSExpr.@var el = this.dom.querySelector("#log")
              el.textContent += ("\n" + msg)
          end)
     onjs(s["clear"], JSExpr.@js function (msg)
-             @var el = this.dom.querySelector("#log")
+             JSExpr.@var el = this.dom.querySelector("#log")
              el.textContent = ""
          end)
     s
 end
 
-w = Window()
 logging = log_window()
 
 function showsome(uis, which)
@@ -37,8 +36,8 @@ function showsome(uis, which)
     s["visible"] = which
     s.dom = Node(:div, id="cont", uis...)
     onjs(s["visible"], JSExpr.@js function (visbl)
-                 @var cont = this.dom.querySelector("cont")
-                 @var cs = cont.children
+                 JSExpr.@var cont = this.dom.querySelector("cont")
+                 JSExpr.@var cs = cont.children
                  for i = 1:cs.length
                      if visbl.indexOf(i) >= 0
                          cs[i].style.display = "block"
@@ -119,6 +118,7 @@ function generate_ui(w)
         on(v) do s
             if s == "Advanced"
                 points_input[] = adv
+                focal[] = ""
             else
                 points_input[] = pair
             end
@@ -188,5 +188,8 @@ function generate_ui(w)
 
 end
 
-
-generate_ui(w)
+function run_ui()
+    w = Window()
+    generate_ui(w)
+    w
+end

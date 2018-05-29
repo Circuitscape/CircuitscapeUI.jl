@@ -14,7 +14,7 @@ function get_data_type()
     s.dom = data_type
     s["value"] = Observable("Raster")
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#dt")
+                 JSExpr.@var el = this.dom.querySelector("#dt")
                  el.onchange = (function ()
                         $(s["value"])[] = el.value
                     end)
@@ -37,7 +37,7 @@ function get_mod_mode_network()
     s.dom = mod_mode
     s["value"] = Observable("Pairwise")
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#modelling")
+                 JSExpr.@var el = this.dom.querySelector("#modelling")
                  el.onchange = (function ()
                         $(s["value"])[] = el.value
                     end)
@@ -62,7 +62,7 @@ function get_mod_mode_raster()
     s.dom = mod_mode
     s["value"] = Observable("Pairwise")
     onimport(s, JSExpr.@js function ()
-                 @var el = this.dom.querySelector("#modelling")
+                 JSExpr.@var el = this.dom.querySelector("#modelling")
                  el.onchange = (function ()
                         $(s["value"])[] = el.value
                     end)

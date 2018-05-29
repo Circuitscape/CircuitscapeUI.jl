@@ -25,9 +25,9 @@ function output_ui()
 
 	s.dom = output_ui
 	onimport(s, JSExpr.@js function ()
-				    @var el1 = this.dom.querySelector("#cur")	
-				    @var el2 = this.dom.querySelector("#volt")	
-                    @var el3 = this.dom.querySelector("#out")
+				    JSExpr.@var el1 = this.dom.querySelector("#cur")	
+				    JSExpr.@var el2 = this.dom.querySelector("#volt")	
+                    JSExpr.@var el3 = this.dom.querySelector("#out")
                     el1.onchange = (function ()
                         $(s["cur"])[] = el1.checked
                         $(s["volt"])[] = el2.checked 
