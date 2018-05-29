@@ -1,5 +1,5 @@
 module CircuitscapeUI
 
-# package code goes here
+include("ui.jl")
 
 end # module
