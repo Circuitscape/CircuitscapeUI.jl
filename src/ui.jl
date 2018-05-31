@@ -10,6 +10,7 @@ include("pairwise_ui.jl")
 include("advanced_ui.jl")
 include("output_ui.jl")
 
+
 function log_window()
     lw = Node(:pre, "", id = "log", 
               attributes = Dict(:style => "height: 200px; overflow: auto"))
@@ -29,7 +30,6 @@ function log_window()
     s
 end
 
-logging = log_window()
 
 function showsome(uis, which)
     s = Scope()
@@ -50,11 +50,11 @@ function showsome(uis, which)
 end
 
 
-function ui_logger(msg, typ)
-
-    logging["log"][] = msg
+function ui_logger(logging) 
+    function (msg, typ)
+        logging["log"][] = msg
+    end
 end
-Circuitscape.ui_interface[] = ui_logger
 
 function generate_ui(w)
 
@@ -141,12 +141,14 @@ function generate_ui(w)
     on(output["out"]) do x
         out[] = x
     end
+    logging = log_window()
+    Circuitscape.ui_interface[] = ui_logger(logging)
 
     # Run button
     run, ob = run_button()
     on(ob) do x
-        @show input_graph[]
-        @show is_res[]
+       @show input_graph[]
+       @show is_res[]
        @show focal[]
        @show source[]
        @show ground[]
