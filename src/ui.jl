@@ -1,12 +1,51 @@
 export run_ui
 
-const logging = log_window()
+
+include("utils.jl")
+include("pairwise_ui.jl")
+include("advanced_ui.jl")
+include("output_ui.jl")
+
+function log_window()
+    lw = Node(:pre, "", id = "log", 
+              attributes = Dict(:style => "height: 200px; overflow: auto"))
+
+    s = Scope()
+    s.dom = lw
+    s["log"] = Observable("")
+    s["clear"] = Observable(rand())
+    onjs(s["log"], JSExpr.@js function (msg)
+             JSExpr.@var el = this.dom.querySelector("#log")
+             el.textContent += ("\n" + msg)
+         end)
+    onjs(s["clear"], JSExpr.@js function (msg)
+             JSExpr.@var el = this.dom.querySelector("#log")
+             el.textContent = ""
+         end)
+    s
+end
+
+function showsome(uis, which)
+    s = Scope()
+    s["visible"] = which
+    s.dom = Node(:div, id="cont", uis...)
+    onjs(s["visible"], JSExpr.@js function (visbl)
+                 JSExpr.@var cont = this.dom.querySelector("cont")
+                 JSExpr.@var cs = cont.children
+                 for i = 1:cs.length
+                     if visbl.indexOf(i) >= 0
+                         cs[i].style.display = "block"
+                     else          
+                         cs[i].style.display = "none"
+                     end
+                 end
+             end)
+    s
+end
 
 function ui_logger(msg, typ)
-
     logging["log"][] = msg
 end
-Circuitscape.ui_interface[] = ui_logger
 
 function generate_ui(w)
 
@@ -70,6 +109,7 @@ function generate_ui(w)
         on(v) do s
             if s == "Advanced"
                 points_input[] = adv
+                focal[] = ""
             else
                 points_input[] = pair
             end
@@ -92,6 +132,8 @@ function generate_ui(w)
     on(output["out"]) do x
         out[] = x
     end
+    logging = log_window()
+    Circuitscape.ui_interface[] = ui_logger(logging)
 
     # Run button
     run, ob = run_button()
@@ -134,4 +176,5 @@ end
 function run_ui()
     w = Window()
     generate_ui(w)
+    w
 end
