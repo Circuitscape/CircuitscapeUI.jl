@@ -1,34 +1,24 @@
 
 function input_ui()
     
-
+    o1 = Observable("")
     graph = vbox(Node(:div, "Raster resistance map or network/graph: ", 
-                      attributes = Dict(:style => "margin-top: 12px")) |> class"b",
-                 Node(:input, id = "input", attributes = Dict(:type => :file, 
-                                                :style => "margin-top: 12px")))
+                      attributes = Dict(:style => "margin-top: 12px")),
+                filepicker(value = o1))
 
-    graph_is_res = hbox(Node(:input, "graph_is_res", id = "check",
-                            attributes = Dict(:type => :checkbox, 
-                           :style => "margin-top: 12px; margin-right: 5px")), 
-                        Node(:div, "Data represents resistances instead of conductances", 
-                             attributes = Dict(:style => "margin-top: 12px")))
+    o2 = Observable(false)
+    graph_is_res = checkbox("Data represents resistances instead of conductances", 
+                            value = o2)
+
     input = vbox(graph,
+                 vskip(1em),
                  graph_is_res)
 
 	# Get file path 
 	s = Scope()
 	s.dom = input
-	onimport(s, JSExpr.@js function ()
-				JSExpr.@var el1 = this.dom.querySelector("#input")
-				JSExpr.@var el2 = this.dom.querySelector("#check")
-				el1.onchange = (function ()
-				   $(s["filepath"])[] = el1.files[0].path
-				end)
-                el2.onchange = (function ()
-                    $(s["check"])[] = el2.checked
-                end)
-			end)
-
+    @private s["filepath"] = o1
+    @private s["check"] = o2
     s
 end
 

@@ -4,6 +4,7 @@ using Tachyons
 using CSSUtil
 using JSExpr
 using Circuitscape
+using InteractBulma
 
 include("utils.jl")
 include("pairwise_ui.jl")
@@ -103,9 +104,11 @@ function generate_ui(w)
     input_graph = Observable("")
     is_res = Observable(false)
     on(input["filepath"]) do x
+        println("filepath changed to $x")
         input_graph[] = x
     end
     on(input["check"]) do x
+       println("check changed to $x")
        is_res[] = x
     end
     
