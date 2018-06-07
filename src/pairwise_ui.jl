@@ -23,22 +23,19 @@ function input_ui()
 end
 
 function pairwise_input_ui()
+
+    o1 = Observable("")
     additional_input = Node(:div, tachyons_css, "Pairwise Mode Options") |> class"f4 lh-title"
     focal = vbox(Node(:div, "Select focal node locations from file: ", 
                       attributes = Dict(:style => "margin-top: 12px")),
-                 Node(:input, id = "focal", attributes = Dict(:type => :file, 
-                                                 :style => "margin-top: 12px")))
+                 filepicker(value = o1))
+
     pair = vbox(additional_input, 
                  focal)
 
     s = Scope()
     s.dom = pair
-    onimport(s, JSExpr.@js function ()
-                 JSExpr.@var el = this.dom.querySelector("#focal")
-                 el.onchange = (function ()
-                     $(s["focal"])[] = el.files[0].path
-                    end)
-             end)
+    @private s["focal"] = o1
 
     s
 end
