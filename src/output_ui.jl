@@ -8,8 +8,8 @@ function output_ui()
                       attributes = Dict(:style => "margin-top: 12px")) |> class"b",
                      textbox(value = o1))
 
-    o2 = Observable("")
-    o3 = Observable("")
+    o2 = Observable(false)
+    o3 = Observable(false)
     options = vbox(checkbox("Current maps", value = o2), 
                     checkbox("Voltage maps", value = o3))
 
