@@ -203,7 +203,9 @@ function generate_ui(w)
 end
 
 function run_ui()
-    w = Window(Dict(:width => 1000, :height => 800))
+    w = Window(Dict(:title => "Circuitscape",
+                    :width => 1000, 
+                    :height => 800))
     generate_ui(w)
     w
 end
