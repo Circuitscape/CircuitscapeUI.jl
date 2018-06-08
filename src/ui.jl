@@ -173,21 +173,32 @@ function generate_ui(w)
     end
     
 
-    page = vbox(heading, 
-                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
-                section1,
+    left = vbox(section1,
                 dt, 
                 mod_mode, 
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 input_section,
                 input, 
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 points_input,
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 output,
-                run,
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
-                logging)|> class"pa3 system-sans-serif"
+                run)
+                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+
+    right = vbox(Node(:div, "Logging") |> class"f4 lh-title", 
+                 vskip(1em),
+                 logging)
+
+    page = vbox(heading,
+                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
+            hbox(left,
+                hskip(0.5em),
+                vline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                hskip(0.5em),
+                right))
+    
+    page = page |> class"pa3 system-sans-serif"
 
     body!(w, page)
 
