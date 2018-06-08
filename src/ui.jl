@@ -174,6 +174,7 @@ function generate_ui(w)
        compute(cfg)
     end
     
+    runtests = runtests_button()
 
     left = vbox(section1,
                 dt, 
@@ -182,7 +183,8 @@ function generate_ui(w)
                 input, 
                 points_input,
                 output,
-                run)
+                run,
+                runtests)
 
     right = vbox(Node(:div, "Logging") |> class"f4 lh-title", 
                  vskip(1em),

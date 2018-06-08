@@ -53,12 +53,22 @@ end
 function run_button()
 
     ob = Observable(rand())
-	#=s = Scope()
-	s["click"] = ob
-	cb = JSExpr.@js () -> $ob[] = $ob[] + 1
-	run = Node(:button, "Run", attributes = Dict(:style => "margin-top: 12px"),
-			events = Dict(:click => cb))=#
     run = button("Run", value = ob)
 
 	run, ob
+end
+
+const TESTPATH = joinpath(Pkg.dir("Circuitscape"), "test")
+function runtests_button()
+    ob = Observable(rand())
+    tests = button("Run tests!", value = ob)
+
+    on(ob) do x
+        p = pwd()
+        cd(TESTPATH)
+        Circuitscape.runtests()
+        cd(p)
+    end
+
+    tests
 end
