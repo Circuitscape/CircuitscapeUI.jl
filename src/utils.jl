@@ -52,13 +52,13 @@ function get_mod_mode_raster()
 end
 function run_button()
 
-	ob = Observable(0)
-	s = Scope()
+    ob = Observable(rand())
+	#=s = Scope()
 	s["click"] = ob
 	cb = JSExpr.@js () -> $ob[] = $ob[] + 1
 	run = Node(:button, "Run", attributes = Dict(:style => "margin-top: 12px"),
-			events = Dict(:click => cb))
-	s.dom = run
+			events = Dict(:click => cb))=#
+    run = button("Run", value = ob)
 
-	s, ob
+	run, ob
 end

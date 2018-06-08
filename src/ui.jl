@@ -14,7 +14,9 @@ include("output_ui.jl")
 
 function log_window()
     lw = Node(:pre, "", id = "log", 
-              attributes = Dict(:style => "height: 200px; overflow: auto"))
+              attributes = Dict(:style => "height: 400px; border: 2px solid Black;
+                                width: 500px; border-style: solid;
+                                overflow: auto"))
 
     s = Scope()
     s.dom = lw
@@ -176,15 +178,11 @@ function generate_ui(w)
     left = vbox(section1,
                 dt, 
                 mod_mode, 
-                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 input_section,
                 input, 
-                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 points_input,
-                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 output,
                 run)
-                #hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
 
     right = vbox(Node(:div, "Logging") |> class"f4 lh-title", 
                  vskip(1em),
@@ -205,7 +203,7 @@ function generate_ui(w)
 end
 
 function run_ui()
-    w = Window()
+    w = Window(Dict(:width => 1000, :height => 800))
     generate_ui(w)
     w
 end
