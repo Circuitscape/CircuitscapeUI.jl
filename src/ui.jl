@@ -61,8 +61,8 @@ end
 
 function generate_ui(w)
 
-    heading = Node(:div, tachyons_css, "Circuitscape 5.0") |> 
-                    class"f-subheadline lh-title tc red"
+    heading = Node(:div, tachyons_css, "CIRCUITSCAPE 5.0") |> 
+                    class"f-subheadline lh-title tc dark-red"
 
     section1 = Node(:div, tachyons_css, "Data Type and Modelling Mode") |> 
                     class"f4 lh-title"
