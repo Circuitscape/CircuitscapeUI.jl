@@ -70,7 +70,7 @@ function generate_ui(w)
     focal = Observable("")
     source = Observable("")
     ground = Observable("")
-    points_input = Observable{Any}(Node(:div))
+    points_input = Observable{Any}(Scope())
 
     on(points_input) do x
         on(x["focal"]) do y

@@ -42,7 +42,7 @@ function get_mod_mode_raster()
                     dropdown(["Pairwise",
                               "Advanced",
                               "One To All",
-                              "All To One"]))
+                              "All To One"], value = o))
 
     s = Scope()
     s.dom = mod_mode
