@@ -14,7 +14,7 @@ include("output_ui.jl")
 
 function log_window()
     lw = Node(:pre, "", id = "log", 
-              attributes = Dict(:style => "height: 400px; border: 2px solid Black;
+              attributes = Dict(:style => "height: 800px; border: 2px solid Black;
                                 width: 500px; border-style: solid;
                                 overflow: auto"))
 
@@ -174,7 +174,7 @@ function generate_ui(w)
        compute(cfg)
     end
     
-    runtests = runtests_button()
+    runtests = runtests_button(w)
 
     left = vbox(section1,
                 dt, 

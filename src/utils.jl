@@ -59,14 +59,19 @@ function run_button()
 end
 
 const TESTPATH = joinpath(Pkg.dir("Circuitscape"), "test")
-function runtests_button()
+function runtests_button(w)
     ob = Observable(rand())
     tests = button("Run tests!", value = ob)
 
     on(ob) do x
         p = pwd()
         cd(TESTPATH)
-        Circuitscape.runtests()
+        try
+            Circuitscape.runtests()
+            Blink.@js w alert("Circuitscape tests passed!")
+        catch
+            Blink.@js w alert("Circuitscape tests failed!")
+        end
         cd(p)
     end
 
