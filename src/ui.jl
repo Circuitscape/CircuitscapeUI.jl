@@ -174,7 +174,14 @@ function generate_ui(w)
        compute(cfg)
     end
     
-    runtests = runtests_button(w)
+
+    runtests_prompt = """
+    It is highly recommended you run the tests on startup. 
+    This warms up the app and checks whether it works as expected:
+    """
+    runtests = vbox(alignself(:center, Node(:div, runtests_prompt)),
+                    vskip(0.5em),
+                    alignself(:center, runtests_button(w)))
 
     left = vbox(section1,
                 dt, 
@@ -183,8 +190,8 @@ function generate_ui(w)
                 input, 
                 points_input,
                 output,
-                run,
-                runtests)
+                vskip(1em),
+                run)
 
     right = vbox(Node(:div, "Logging") |> class"f4 lh-title", 
                  vskip(1em),
@@ -192,6 +199,8 @@ function generate_ui(w)
 
     page = vbox(heading,
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
+                runtests,
+                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)),
             hbox(left,
                 hskip(0.5em),
                 vline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
