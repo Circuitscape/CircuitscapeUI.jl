@@ -67,10 +67,14 @@ function generate_ui(w)
     section1 = Node(:div, tachyons_css, "Data Type and Modelling Mode") |> 
                     class"f4 lh-title"
 
+    data_type = "Raster"
+    scenario = "Pairwise"
     focal = Observable("")
     source = Observable("")
     ground = Observable("")
     points_input = Observable{Any}(Scope())
+    num_parallel = Observable(1)
+    
 
     on(points_input) do x
         on(x["focal"]) do y
@@ -90,6 +94,9 @@ function generate_ui(w)
 
     # Next drop down
     mod_mode = map(dt["value"]) do v
+        @show v
+        data_type = v
+        scenario = "Pairwise"
         points_input[] = pairwise_input_ui()
         if v == "Network"
             get_mod_mode_network()
@@ -121,6 +128,7 @@ function generate_ui(w)
     on(mod_mode) do x
         v = x["value"]
         on(v) do s
+            scenario = s
             if s == "Advanced"
                 points_input[] = adv
                 focal[] = ""
@@ -149,9 +157,18 @@ function generate_ui(w)
     logging = log_window()
     Circuitscape.ui_interface[] = ui_logger(logging)
 
+    o = Observable(1)
+    parallel = spinbox(value = o)
+    on(o) do x
+        @show x
+        num_parallel[] = x
+    end
+
     # Run button
     run, ob = run_button()
     on(ob) do x
+        @show data_type
+        @show scenario
        @show input_graph[]
        @show is_res[]
        @show focal[]
@@ -160,7 +177,10 @@ function generate_ui(w)
        @show out[]
        @show write_cur_maps[]
        @show write_volt_maps[]
+       @show num_parallel[]
        cfg = Dict{String,String}()
+       cfg["data_type"] = data_type
+       cfg["scenario"] = scenario
        cfg["habitat_file"] = input_graph[]
        cfg["habitat_map_is_resistances"] = string(is_res[])
        cfg["point_file"] = focal[]
@@ -169,6 +189,11 @@ function generate_ui(w)
        cfg["output_file"] = out[]
        cfg["write_cur_maps"] = string(write_cur_maps[])
        cfg["write_volt_maps"] = string(write_volt_maps[])
+       if num_parallel[] > 1 
+           println("attempting to start up with $(num_parallel[]) processes")
+           cfg["parallelize"] = "true"
+           cfg["max_parallel"] = string(num_parallel[])
+        end
 
        logging["clear"][] = rand()
        compute(cfg)
@@ -189,6 +214,7 @@ function generate_ui(w)
                 input_section,
                 input, 
                 points_input,
+                parallel,
                 output,
                 vskip(1em),
                 run)
