@@ -164,6 +164,13 @@ function generate_ui(w)
         num_parallel[] = x
     end
 
+    compute_section = Node(:div, tachyons_css, "Compute Options") |> 
+                    class"f4 lh-title"
+    parallel_option = vbox(Node(:div, "Number of parallel processes to use: ", 
+                      attributes = Dict(:style => "margin-top: 12px")),
+                 parallel)
+
+
     # Run button
     run, ob = run_button()
     on(ob) do x
@@ -196,7 +203,13 @@ function generate_ui(w)
         end
 
        logging["clear"][] = rand()
-       compute(cfg)
+       try 
+           compute(cfg)
+           Blink.@js_ w alert("Run completed!")
+       catch e
+           Blink.@js_ w alert("$e")
+       end
+            
     end
     
 
@@ -214,7 +227,8 @@ function generate_ui(w)
                 input_section,
                 input, 
                 points_input,
-                parallel,
+                compute_section,
+                parallel_option,
                 output,
                 vskip(1em),
                 run)

@@ -68,9 +68,9 @@ function runtests_button(w)
         cd(TESTPATH)
         try
             Circuitscape.runtests()
-            Blink.@js w alert("Circuitscape tests passed!")
+            Blink.@js_ w alert("Circuitscape tests passed!")
         catch
-            Blink.@js w alert("Circuitscape tests failed!")
+            Blink.@js_ w alert("Circuitscape tests failed!")
         end
         cd(p)
     end
