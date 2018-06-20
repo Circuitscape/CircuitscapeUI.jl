@@ -74,6 +74,7 @@ function generate_ui(w)
     ground = Observable("")
     points_input = Observable{Any}(Scope())
     num_parallel = Observable(1)
+    solver_choice = "cg+amg"
     
 
     on(points_input) do x
@@ -164,11 +165,21 @@ function generate_ui(w)
         num_parallel[] = x
     end
 
+    o2 = Observable("cg+amg")
+    solver = dropdown(["cg+amg", "cholmod"], value = o2)
+    on(o2) do x
+        @show x
+        solver_choice = x
+    end
+
     compute_section = Node(:div, tachyons_css, "Compute Options") |> 
                     class"f4 lh-title"
     parallel_option = vbox(Node(:div, "Number of parallel processes to use: ", 
                       attributes = Dict(:style => "margin-top: 12px")),
                  parallel)
+    solver_option = vbox(Node(:div, "Solver: ", 
+                      attributes = Dict(:style => "margin-top: 12px")),
+                 solver)
 
 
     # Run button
@@ -200,7 +211,9 @@ function generate_ui(w)
            println("attempting to start up with $(num_parallel[]) processes")
            cfg["parallelize"] = "true"
            cfg["max_parallel"] = string(num_parallel[])
-        end
+       end
+       cfg["solver"] = solver_choice
+
 
        logging["clear"][] = rand()
        try 
@@ -229,6 +242,7 @@ function generate_ui(w)
                 points_input,
                 compute_section,
                 parallel_option,
+                solver_option,
                 output,
                 vskip(1em),
                 run)
