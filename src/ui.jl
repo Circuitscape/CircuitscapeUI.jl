@@ -4,6 +4,7 @@ using Tachyons
 using CSSUtil
 using JSExpr
 using Circuitscape
+using InteractBulma
 
 include("utils.jl")
 include("pairwise_ui.jl")
@@ -13,7 +14,9 @@ include("output_ui.jl")
 
 function log_window()
     lw = Node(:pre, "", id = "log", 
-              attributes = Dict(:style => "height: 200px; overflow: auto"))
+              attributes = Dict(:style => "height: 800px; border: 2px solid Black;
+                                width: 500px; border-style: solid;
+                                overflow: auto"))
 
     s = Scope()
     s.dom = lw
@@ -58,16 +61,21 @@ end
 
 function generate_ui(w)
 
-    heading = Node(:div, tachyons_css, "Circuitscape 5.0") |> 
-                    class"f-subheadline lh-title tc red"
+    heading = Node(:div, tachyons_css, "CIRCUITSCAPE 5.0") |> 
+                    class"f-subheadline lh-title tc dark-red"
 
     section1 = Node(:div, tachyons_css, "Data Type and Modelling Mode") |> 
                     class"f4 lh-title"
 
+    data_type = "Raster"
+    scenario = "Pairwise"
     focal = Observable("")
     source = Observable("")
     ground = Observable("")
-    points_input = Observable{Any}(Node(:div))
+    points_input = Observable{Any}(Scope())
+    num_parallel = Observable(1)
+    solver_choice = "cg+amg"
+    
 
     on(points_input) do x
         on(x["focal"]) do y
@@ -87,6 +95,9 @@ function generate_ui(w)
 
     # Next drop down
     mod_mode = map(dt["value"]) do v
+        @show v
+        data_type = v
+        scenario = "Pairwise"
         points_input[] = pairwise_input_ui()
         if v == "Network"
             get_mod_mode_network()
@@ -103,9 +114,11 @@ function generate_ui(w)
     input_graph = Observable("")
     is_res = Observable(false)
     on(input["filepath"]) do x
+        println("filepath changed to $x")
         input_graph[] = x
     end
     on(input["check"]) do x
+       println("check changed to $x")
        is_res[] = x
     end
     
@@ -116,6 +129,7 @@ function generate_ui(w)
     on(mod_mode) do x
         v = x["value"]
         on(v) do s
+            scenario = s
             if s == "Advanced"
                 points_input[] = adv
                 focal[] = ""
@@ -144,9 +158,35 @@ function generate_ui(w)
     logging = log_window()
     Circuitscape.ui_interface[] = ui_logger(logging)
 
+    o = Observable(1)
+    parallel = spinbox(value = o)
+    on(o) do x
+        @show x
+        num_parallel[] = x
+    end
+
+    o2 = Observable("cg+amg")
+    solver = dropdown(["cg+amg", "cholmod"], value = o2)
+    on(o2) do x
+        @show x
+        solver_choice = x
+    end
+
+    compute_section = Node(:div, tachyons_css, "Compute Options") |> 
+                    class"f4 lh-title"
+    parallel_option = vbox(Node(:div, "Number of parallel processes to use: ", 
+                      attributes = Dict(:style => "margin-top: 12px")),
+                 parallel)
+    solver_option = vbox(Node(:div, "Solver: ", 
+                      attributes = Dict(:style => "margin-top: 12px")),
+                 solver)
+
+
     # Run button
     run, ob = run_button()
     on(ob) do x
+        @show data_type
+        @show scenario
        @show input_graph[]
        @show is_res[]
        @show focal[]
@@ -155,7 +195,10 @@ function generate_ui(w)
        @show out[]
        @show write_cur_maps[]
        @show write_volt_maps[]
+       @show num_parallel[]
        cfg = Dict{String,String}()
+       cfg["data_type"] = data_type
+       cfg["scenario"] = scenario
        cfg["habitat_file"] = input_graph[]
        cfg["habitat_map_is_resistances"] = string(is_res[])
        cfg["point_file"] = focal[]
@@ -164,34 +207,70 @@ function generate_ui(w)
        cfg["output_file"] = out[]
        cfg["write_cur_maps"] = string(write_cur_maps[])
        cfg["write_volt_maps"] = string(write_volt_maps[])
+       if num_parallel[] > 1 
+           println("attempting to start up with $(num_parallel[]) processes")
+           cfg["parallelize"] = "true"
+           cfg["max_parallel"] = string(num_parallel[])
+       end
+       cfg["solver"] = solver_choice
+
 
        logging["clear"][] = rand()
-       compute(cfg)
+       try 
+           compute(cfg)
+           Blink.@js_ w alert("Run completed!")
+       catch e
+           Blink.@js_ w alert("$e")
+       end
+            
     end
     
 
-    page = vbox(heading, 
-                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
-                section1,
+    runtests_prompt = """
+    It is highly recommended you run the tests on startup. 
+    This warms up the app and checks whether it works as expected:
+    """
+    runtests = vbox(alignself(:center, Node(:div, runtests_prompt)),
+                    vskip(0.5em),
+                    alignself(:center, runtests_button(w)))
+
+    left = vbox(section1,
                 dt, 
                 mod_mode, 
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 input_section,
                 input, 
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
                 points_input,
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                compute_section,
+                parallel_option,
+                solver_option,
                 output,
-                run,
-                hline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
-                logging)|> class"pa3 system-sans-serif"
+                vskip(1em),
+                run)
+
+    right = vbox(Node(:div, "Logging") |> class"f4 lh-title", 
+                 vskip(1em),
+                 logging)
+
+    page = vbox(heading,
+                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
+                runtests,
+                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)),
+            hbox(left,
+                hskip(0.5em),
+                vline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                hskip(0.5em),
+                right))
+    
+    page = page |> class"pa3 system-sans-serif"
 
     body!(w, page)
 
 end
 
 function run_ui()
-    w = Window()
+    w = Window(Dict(:title => "Circuitscape",
+                    :width => 1000, 
+                    :height => 800))
     generate_ui(w)
     w
 end

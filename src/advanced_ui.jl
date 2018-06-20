@@ -4,16 +4,17 @@ function advanced_input_ui()
     title = Node(:div, tachyons_css, "Advanced Mode Options") |> class"f4 lh-title"
 
     # Sources
+    o1 = Observable("")
     sources = vbox(Node(:div, "Current source file: ", 
                       attributes = Dict(:style => "margin-top: 12px")) |> class"b",
-                 Node(:input, id = "source", attributes = Dict(:type => :file, 
-                                                :style => "margin-top: 12px")))
+                   filepicker(value = o1))
 
     # Grounds
+    o2 = Observable("")
     grounds = vbox(Node(:div, "Ground point file: ", 
                       attributes = Dict(:style => "margin-top: 12px")) |> class"b",
-                 Node(:input, id = "ground", attributes = Dict(:type => :file, 
-                                                :style => "margin-top: 12px")))
+                   filepicker(value = o2))
+
     adv = vbox(title,
              sources,
              grounds)
@@ -21,18 +22,8 @@ function advanced_input_ui()
     # Define scope
     s = Scope()
     s.dom = adv
+    @private s["source"] = o1
+    @private s["ground"] = o2
 
-    onimport(s, JSExpr.@js function ()
-                 JSExpr.@var el1 = this.dom.querySelector("#source")
-                 JSExpr.@var el2 = this.dom.querySelector("#ground")
-                 el1.onchange = (function ()
-                         $(s["source"])[] = el1.files[0].path
-                         $(s["ground"])[] = el2.files[0].path
-                 end)
-                 el2.onchange = (function ()
-                         $(s["source"])[] = el1.files[0].path
-                         $(s["ground"])[] = el2.files[0].path
-                 end)
-                end)
     s
 end
