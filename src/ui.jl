@@ -4,18 +4,21 @@ using Tachyons
 using CSSUtil
 using JSExpr
 using Circuitscape
+using InteractBase
 using InteractBulma
+using AssetRegistry
 
 include("utils.jl")
 include("pairwise_ui.jl")
 include("advanced_ui.jl")
 include("output_ui.jl")
 
+const logo = joinpath(dirname(@__FILE__), "..", "assets", "Circuitscape.icns")
 
 function log_window()
     lw = Node(:pre, "", id = "log", 
-              attributes = Dict(:style => "height: 800px; border: 2px solid Black;
-                                width: 500px; border-style: solid;
+              attributes = Dict(:style => "height: 900px; border: 2px solid Black;
+                                width: 800px; border-style: solid;
                                 overflow: auto"))
 
     s = Scope()
@@ -61,8 +64,11 @@ end
 
 function generate_ui(w)
 
-    heading = Node(:div, tachyons_css, "CIRCUITSCAPE 5.0") |> 
-                    class"f-subheadline lh-title tc dark-red"
+    heading = Node(:div, tachyons_css, "Circuitscape 5.0") |> 
+                    class"f2 lh-copy tc"
+
+    picture = HTML("<img src = $(AssetRegistry.register(logo))>")
+
 
     section1 = Node(:div, tachyons_css, "Data Type and Modelling Mode") |> 
                     class"f4 lh-title"
@@ -230,9 +236,7 @@ function generate_ui(w)
     It is highly recommended you run the tests on startup. 
     This warms up the app and checks whether it works as expected:
     """
-    runtests = vbox(alignself(:center, Node(:div, runtests_prompt)),
-                    vskip(0.5em),
-                    alignself(:center, runtests_button(w)))
+    runtests = runtests_button(w)
 
     left = vbox(section1,
                 dt, 
@@ -251,26 +255,36 @@ function generate_ui(w)
                  vskip(1em),
                  logging)
 
-    page = vbox(heading,
-                hline(style = :solid, w=5px)(style = Dict(:margin => 20px)), 
-                runtests,
+    page = vbox(alignself(:center, 
+    				hbox(
+    					heading, 
+    					hskip(4em), 
+    					vbox(vskip(0.5em), runtests))),
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)),
-            hbox(left,
-                hskip(0.5em),
-                vline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
-                hskip(0.5em),
-                right))
+            	hbox(left,
+                	hskip(0.5em),
+                	vline(style = :solid, w=3px)(style = Dict(:margin => 10px)),
+                	hskip(0.5em),
+                	right)
+            	)
     
     page = page |> class"pa3 system-sans-serif"
 
-    body!(w, page)
+    # body!(w, page)
 
 end
 
 function run_ui()
-    w = Window(Dict(:title => "Circuitscape",
-                    :width => 1000, 
+    w = Window(Dict(:show=>false))
+    wait(w.content)
+    p = generate_ui(w)
+   # tools(w)
+    Blink.body!(w, p)
+    w1 = Window(Dict(:title => "Circuitscape",
+                    :width => 1300, 
                     :height => 800))
-    generate_ui(w)
-    w
+    p = generate_ui(w1)
+    wait(w1.content)
+    Blink.body!(w1, p)
+    w1
 end
