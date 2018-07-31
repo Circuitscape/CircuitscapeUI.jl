@@ -13,7 +13,7 @@ include("pairwise_ui.jl")
 include("advanced_ui.jl")
 include("output_ui.jl")
 
-const logo = joinpath(dirname(@__FILE__), "..", "assets", "Circuitscape.icns")
+const logo = joinpath(dirname(@__FILE__), "..", "assets", "cs_logo.ico")
 
 function log_window()
     lw = Node(:pre, "", id = "log", 
@@ -256,9 +256,10 @@ function generate_ui(w)
                  logging)
 
     page = vbox(alignself(:center, 
-    				hbox(
+    				hbox(picture,
+    					hskip(3em),
     					heading, 
-    					hskip(4em), 
+    					hskip(3em), 
     					vbox(vskip(0.5em), runtests))),
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)),
             	hbox(left,
@@ -282,7 +283,8 @@ function run_ui()
     Blink.body!(w, p)
     w1 = Window(Dict(:title => "Circuitscape",
                     :width => 1300, 
-                    :height => 800))
+                    :height => 800, 
+                    :icon => logo))
     p = generate_ui(w1)
     wait(w1.content)
     Blink.body!(w1, p)
