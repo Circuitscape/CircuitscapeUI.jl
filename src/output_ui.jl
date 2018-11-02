@@ -1,20 +1,20 @@
 function output_ui()
-    
+
     # Title of section
-    title = Node(:div, tachyons_css, "Output Options") |> class"f4 lh-title"
+    title = node(:div, tachyons_css, "Output Options") |> class"f4 lh-title"
 
     o1 = Observable("")
-    base_name = vbox(Node(:div, "Base output file name: ",
+    base_name = vbox(node(:div, "Base output file name: ",
                       attributes = Dict(:style => "margin-top: 12px")) |> class"b",
                      textbox(value = o1))
 
     o2 = Observable(false)
     o3 = Observable(false)
-    options = vbox(checkbox("Current maps", value = o2), 
+    options = vbox(checkbox("Current maps", value = o2),
                     checkbox("Voltage maps", value = o3))
 
     output_ui = vbox(title,
-                     base_name, 
+                     base_name,
                      options)
 
     s = Scope()
