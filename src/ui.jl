@@ -16,7 +16,7 @@ include("output_ui.jl")
 const logo = joinpath(dirname(@__FILE__), "..", "assets", "cs_logo.ico")
 
 function log_window()
-    lw = Node(:pre, "", id = "log", 
+    lw = node(:pre, "", id = "log",
               attributes = Dict(:style => "height: 900px; border: 2px solid Black;
                                 width: 800px; border-style: solid;
                                 overflow: auto"))
@@ -40,14 +40,14 @@ end
 function showsome(uis, which)
     s = Scope()
     s["visible"] = which
-    s.dom = Node(:div, id="cont", uis...)
+    s.dom = node(:div, id="cont", uis...)
     onjs(s["visible"], JSExpr.@js function (visbl)
                  JSExpr.@var cont = this.dom.querySelector("cont")
                  JSExpr.@var cs = cont.children
                  for i = 1:cs.length
                      if visbl.indexOf(i) >= 0
                          cs[i].style.display = "block"
-                     else          
+                     else
                          cs[i].style.display = "none"
                      end
                  end
@@ -56,7 +56,7 @@ function showsome(uis, which)
 end
 
 
-function ui_logger(logging) 
+function ui_logger(logging)
     function (msg, typ)
         logging["log"][] = msg
     end
@@ -64,13 +64,13 @@ end
 
 function generate_ui(w)
 
-    heading = Node(:div, tachyons_css, "Circuitscape 5.0") |> 
+    heading = node(:div, tachyons_css, "Circuitscape 5.0") |>
                     class"f2 lh-copy tc"
 
     picture = HTML("<img src = $(AssetRegistry.register(logo))>")
 
 
-    section1 = Node(:div, tachyons_css, "Data Type and Modelling Mode") |> 
+    section1 = node(:div, tachyons_css, "Data Type and Modelling Mode") |>
                     class"f4 lh-title"
 
     data_type = "Raster"
@@ -81,7 +81,7 @@ function generate_ui(w)
     points_input = Observable{Any}(Scope())
     num_parallel = Observable(1)
     solver_choice = "cg+amg"
-    
+
 
     on(points_input) do x
         on(x["focal"]) do y
@@ -112,11 +112,11 @@ function generate_ui(w)
         end
     end
 
-    # Get the input raster/graph 
-    input_section = Node(:div, tachyons_css, "Input Resistance Data") |> 
+    # Get the input raster/graph
+    input_section = node(:div, tachyons_css, "Input Resistance Data") |>
                     class"f4 lh-title"
     input = input_ui()
-    
+
     input_graph = Observable("")
     is_res = Observable(false)
     on(input["filepath"]) do x
@@ -127,11 +127,11 @@ function generate_ui(w)
        println("check changed to $x")
        is_res[] = x
     end
-    
+
     # Focal points or advanced mode
     pair = pairwise_input_ui()
     adv = advanced_input_ui()
-    
+
     on(mod_mode) do x
         v = x["value"]
         on(v) do s
@@ -145,7 +145,7 @@ function generate_ui(w)
         end
     end
     dt["value"][] = "Raster"
-    
+
     # Output options
     write_cur_maps = Observable(false)
     write_volt_maps = Observable(false)
@@ -178,12 +178,12 @@ function generate_ui(w)
         solver_choice = x
     end
 
-    compute_section = Node(:div, tachyons_css, "Compute Options") |> 
+    compute_section = node(:div, tachyons_css, "Compute Options") |>
                     class"f4 lh-title"
-    parallel_option = vbox(Node(:div, "Number of parallel processes to use: ", 
+    parallel_option = vbox(node(:div, "Number of parallel processes to use: ",
                       attributes = Dict(:style => "margin-top: 12px")),
                  parallel)
-    solver_option = vbox(Node(:div, "Solver: ", 
+    solver_option = vbox(node(:div, "Solver: ",
                       attributes = Dict(:style => "margin-top: 12px")),
                  solver)
 
@@ -213,7 +213,7 @@ function generate_ui(w)
        cfg["output_file"] = out[]
        cfg["write_cur_maps"] = string(write_cur_maps[])
        cfg["write_volt_maps"] = string(write_volt_maps[])
-       if num_parallel[] > 1 
+       if num_parallel[] > 1
            println("attempting to start up with $(num_parallel[]) processes")
            cfg["parallelize"] = "true"
            cfg["max_parallel"] = string(num_parallel[])
@@ -222,27 +222,27 @@ function generate_ui(w)
 
 
        logging["clear"][] = rand()
-       try 
+       try
            compute(cfg)
            Blink.@js_ w alert("Run completed!")
        catch e
            Blink.@js_ w alert("$e")
        end
-            
+
     end
-    
+
 
     runtests_prompt = """
-    It is highly recommended you run the tests on startup. 
+    It is highly recommended you run the tests on startup.
     This warms up the app and checks whether it works as expected:
     """
     runtests = runtests_button(w)
 
     left = vbox(section1,
-                dt, 
-                mod_mode, 
+                dt,
+                mod_mode,
                 input_section,
-                input, 
+                input,
                 points_input,
                 compute_section,
                 parallel_option,
@@ -251,15 +251,15 @@ function generate_ui(w)
                 vskip(1em),
                 run)
 
-    right = vbox(Node(:div, "Logging") |> class"f4 lh-title", 
+    right = vbox(node(:div, "Logging") |> class"f4 lh-title",
                  vskip(1em),
                  logging)
 
-    page = vbox(alignself(:center, 
+    page = vbox(alignself(:center,
     				hbox(picture,
     					hskip(3em),
-    					heading, 
-    					hskip(3em), 
+    					heading,
+    					hskip(3em),
     					vbox(vskip(0.5em), runtests))),
                 hline(style = :solid, w=5px)(style = Dict(:margin => 20px)),
             	hbox(left,
@@ -268,7 +268,7 @@ function generate_ui(w)
                 	hskip(0.5em),
                 	right)
             	)
-    
+
     page = page |> class"pa3 system-sans-serif"
 
     # body!(w, page)
@@ -282,8 +282,8 @@ function run_ui()
    # tools(w)
     Blink.body!(w, p)
     w1 = Window(Dict(:title => "Circuitscape",
-                    :width => 1300, 
-                    :height => 800, 
+                    :width => 1300,
+                    :height => 800,
                     :icon => logo))
     p = generate_ui(w1)
     wait(w1.content)

@@ -4,7 +4,7 @@ function get_data_type()
 
     # Select between raster and network
     o = Observable("Raster")
-    data_type = vbox(Node(:div, data_type_prompt, 
+    data_type = vbox(node(:div, data_type_prompt,
                           attributes = Dict(:style => "margin-top: 12px")) |> class"b",
                      vskip(0.5em),
                      dropdown(["Raster", "Network"]))
@@ -17,10 +17,10 @@ function get_data_type()
 end
 
 function get_mod_mode_network()
-    
+
     mod_mode_prompt = "Step 2: Choose a Modelling Mode: "
     o = Observable("Pairwise")
-    mod_mode = vbox(Node(:div, mod_mode_prompt, 
+    mod_mode = vbox(node(:div, mod_mode_prompt,
                           attributes = Dict(:style => "margin-top: 12px")) |> class"b",
                     vskip(0.5em),
                     dropdown(["Pairwise", "Advanced"]))
@@ -33,10 +33,10 @@ function get_mod_mode_network()
 end
 
 function get_mod_mode_raster()
-    
+
     mod_mode_prompt = "Step 2: Choose a Modelling Mode: "
     o = Observable("Pairwise")
-    mod_mode = vbox(Node(:div, mod_mode_prompt, 
+    mod_mode = vbox(node(:div, mod_mode_prompt,
                           attributes = Dict(:style => "margin-top: 12px")) |> class"b",
                     vskip(0.5em),
                     dropdown(["Pairwise",
@@ -58,7 +58,7 @@ function run_button()
 	run, ob
 end
 
-const TESTPATH = joinpath(Pkg.dir("Circuitscape"), "test")
+const TESTPATH = joinpath(dirname(pathof(Circuitscape)), "..", "test")
 function runtests_button(w)
     ob = Observable(rand())
     tests = button("Run tests!", value = ob)
