@@ -1,6 +1,6 @@
 dir(mod) = normpath(joinpath(dirname(pathof(mod)),".."))
 
-function build_cs_binary()
+function build_cs_binary(build_path=pwd())
 
     resources = [ 
                  joinpath(dir(Blink), "src", "AtomShell", "main.js"), 
@@ -27,6 +27,6 @@ function build_cs_binary()
                      lib_paths
                     )
 
-    build_app_bundle("Circuitscape.jl", resources = resources, 
-                              libraries = libraries, icns_file = "/Users/ranjan/Repos/Circuitscape/circuitscape.icns")
+    build_app_bundle("Circuitscape.jl", resources = resources, builddir = build_path, 
+                     libraries = libraries, icns_file = joinpath("..", "build", "circuitscape.icns"))
 end
