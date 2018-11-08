@@ -1,3 +1,15 @@
+using Blink
+using Tachyons
+using WebIO
+using InteractBase
+using InteractBulma
+using Circuitscape
+using CircuitscapeUI
+using MbedTLS
+using Knockout
+using MacroTools
+using AssetRegistry
+
 function change_dir_if_bundle()
     cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
 end
@@ -53,6 +65,8 @@ Base.@ccallable function julia_main(args::Vector{String})::Cint
     @show pwd()
     @show Blink.AtomShell._electron
     @show WebIO.bundlepath
+    @show InteractBulma.bulma_tooltip_min_css
+    @show InteractBulma.bulma_accordion_min_css
     w = CircuitscapeUI.run_ui()
     @show AssetRegistry.registry
     while Blink.active(w)
