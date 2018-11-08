@@ -22,6 +22,7 @@ Core.eval(Blink, :(resources = Dict("spinner.css" => "res/spinner.css",
                                "blink.js" => "res/blink.js", 
                                "blink.css" => "res/blink.css", 
                                "reset.css" => "res/reset.css")))
+Core.eval(WebIO, :(webiosetup = "webio_setup.js"))
 
 # Mbedtls
 Core.eval(MbedTLS, :(libmbedcrypto = "../Libraries/libmbedcrypto"))
@@ -33,7 +34,7 @@ Core.eval(Tachyons, :(path = "tachyons.min.css"))
 
 # WebIO
 Core.eval(WebIO, :(bundlepath = "bundle.js"))
-Core.eval(WebIO, :(blinksetup = "blink_setup.js"))
+# Core.eval(WebIO, :(blinksetup = "blink_setup.js"))
 
 # InteractBase
 Core.eval(InteractBase, :(font_awesome = "all.js"))

@@ -33,6 +33,6 @@ function build_cs_binary(build_path=pwd())
                      lib_paths
                     )
 
-    build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, 
+    build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, autosnoop = true,
                      libraries = libraries, icns_file = joinpath("..", "build", "circuitscape.icns"))
 end
