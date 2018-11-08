@@ -9,6 +9,9 @@ using InteractBulma
 using Circuitscape
 using MbedTLS
 using Knockout
+using Distributed
+using CSSUtil
+using JSExpr
 
 include("ui.jl")
 include(joinpath("..", "build", "build_script.jl"))
