@@ -1,21 +1,6 @@
-using WebIO
-using Blink
-# import HttpParser
-using CircuitscapeUI
-# import ApplicationBuilder.App: change_dir_if_bundle
-import MacroTools
-import MbedTLS
-import Tachyons
-import InteractBase
-import InteractBulma
-import WebIO
-import AssetRegistry
 
 function change_dir_if_bundle()
-    # @show pwd()
-    # @show Base.julia_cmd()
     cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
-    # @show pwd()
 end
 
 # Blink 
@@ -49,8 +34,6 @@ Core.eval(InteractBulma, :(bulma_slider_min_css = "bulma-slider.min.css"))
 Core.eval(InteractBulma, :(bulma_switch_min_css = "bulma-switch.min.css"))
 Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-checkradio.min.css"))
 
-# Vue 
-# eval(Vue, :(vue_js = "Resources/vue.js"))
 
 # CircuitscapeUI
 Core.eval(CircuitscapeUI, :(TESTPATH = "test/"))
