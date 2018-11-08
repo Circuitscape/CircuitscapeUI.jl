@@ -1,5 +1,6 @@
 dir(mod) = normpath(joinpath(dirname(pathof(mod)),".."))
 const BUILD_FILE = joinpath(dir(CircuitscapeUI), "build", "Circuitscape.jl")
+const SNOOP_FILE = joinpath(dir(CircuitscapeUI), "build", "snoop.jl")
 
 function build_cs_binary(build_path=pwd())
 
@@ -33,6 +34,6 @@ function build_cs_binary(build_path=pwd())
                      lib_paths
                     )
 
-    build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, autosnoop = true,
+    build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, snoopfile = SNOOP_FILE,
                      libraries = libraries, icns_file = joinpath("..", "build", "circuitscape.icns"))
 end
