@@ -1,4 +1,3 @@
-
 function change_dir_if_bundle()
     cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
 end
@@ -17,9 +16,6 @@ Core.eval(MbedTLS, :(libmbedcrypto = "../Libraries/libmbedcrypto"))
 Core.eval(MbedTLS, :(libmbedtls = "../Libraries/libmbedtls"))
 Core.eval(MbedTLS, :(libmbedx509 = "../Libraries/libmbedx509"))
 
-# HttpParser
-# eval(HttpParser, :(lib = "Libraries/libhttp_parser.dylib"))
-
 # Tachyons
 Core.eval(Tachyons, :(path = "tachyons.min.css"))
 
@@ -28,18 +24,27 @@ Core.eval(WebIO, :(bundlepath = "bundle.js"))
 Core.eval(WebIO, :(blinksetup = "blink_setup.js"))
 
 # InteractBase
+Core.eval(InteractBase, :(font_awesome = "all.js"))
+Core.eval(InteractBase, :(style_css = "style.css"))
+
+# InteractBulma
 Core.eval(InteractBulma, :(all_js = "all.js"))
 Core.eval(InteractBulma, :(bulma_min_css = "bulma.min.css"))
 Core.eval(InteractBulma, :(bulma_slider_min_css = "bulma-slider.min.css"))
 Core.eval(InteractBulma, :(bulma_switch_min_css = "bulma-switch.min.css"))
 Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-checkradio.min.css"))
+Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-tooltip.min.css"))
+Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-accordion.min.css"))
 
+# Knockout 
+Core.eval(Knockout, :(knockout_js = "knockout.js"))
+Core.eval(Knockout, :(knockout_punches_js = "knockout_punches.js"))
 
 # CircuitscapeUI
 Core.eval(CircuitscapeUI, :(TESTPATH = "test/"))
 Core.eval(CircuitscapeUI, :(logo = "cs_logo.ico"))
 
-## MacroTools
+# MacroTools
 Core.eval(MacroTools, :(animals_file = "animals.txt"))
 
 Base.@ccallable function julia_main(args::Vector{String})::Cint
@@ -47,17 +52,7 @@ Base.@ccallable function julia_main(args::Vector{String})::Cint
     # change_dir_if_bundle()
     @show pwd()
     @show Blink.AtomShell._electron
-    @show Tachyons.path
     @show WebIO.bundlepath
-    @show WebIO.blinksetup
-    # @show HttpParser.lib
-    @show InteractBulma.bulma_min_css
-    # @show Vue.vue_js
-    @show InteractBulma.all_js
-    @show InteractBulma.bulma_slider_min_css
-    @show InteractBulma.bulma_switch_min_css
-    @show InteractBulma.bulma_checkradio_min_css
-    @show MacroTools.animals_file
     w = CircuitscapeUI.run_ui()
     @show AssetRegistry.registry
     while Blink.active(w)
