@@ -9,6 +9,7 @@ import Tachyons
 import InteractBase
 import InteractBulma
 import WebIO
+import AssetRegistry
 
 function change_dir_if_bundle()
     # @show pwd()

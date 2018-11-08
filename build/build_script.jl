@@ -30,11 +30,16 @@ resources =
       #       joinpath(dir(MacroTools), "animals.txt"), 
              joinpath(dir(CircuitscapeUI), "assets", "cs_logo.ico")
             ]
+libs = readdir(joinpath(dir(MbedTLS), "deps/usr/lib/"))
+lib_paths = joinpath.(dir(MbedTLS), "deps/usr/lib", libs)
 
-libraries = [joinpath(dir(Blink), "deps/Julia.app"), 
-             joinpath(dir(MbedTLS), "deps/usr/lib/libmbedcrypto.dylib"),
-             joinpath(dir(MbedTLS), "deps/usr/lib/libmbedtls.dylib"),
-             joinpath(dir(MbedTLS), "deps/usr/lib/libmbedx509.dylib")]
+libraries = vcat(
+                 joinpath(dir(Blink), "deps/Julia.app"), 
+                 lib_paths
+                )
+             # joinpath(dir(MbedTLS), "deps/usr/lib/libmbedcrypto.dylib"),
+             #joinpath(dir(MbedTLS), "deps/usr/lib/libmbedtls.dylib"),
+             #joinpath(dir(MbedTLS), "deps/usr/lib/libmbedx509.dylib")]
              #joinpath(dir(HttpParser), "deps/usr/lib/libhttp_parser.dylib")]
 
 build_app_bundle("Circuitscape.jl", resources = resources, 
