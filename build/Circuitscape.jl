@@ -33,8 +33,8 @@ Core.eval(InteractBulma, :(bulma_min_css = "bulma.min.css"))
 Core.eval(InteractBulma, :(bulma_slider_min_css = "bulma-slider.min.css"))
 Core.eval(InteractBulma, :(bulma_switch_min_css = "bulma-switch.min.css"))
 Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-checkradio.min.css"))
-Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-tooltip.min.css"))
-Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-accordion.min.css"))
+Core.eval(InteractBulma, :(bulma_tooltip_min_css = "bulma-tooltip.min.css"))
+Core.eval(InteractBulma, :(bulma_accordion_min_css = "bulma-accordion.min.css"))
 
 # Knockout 
 Core.eval(Knockout, :(knockout_js = "knockout.js"))
