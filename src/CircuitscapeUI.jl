@@ -8,6 +8,7 @@ using InteractBase
 using InteractBulma
 using Circuitscape
 using MbedTLS
+using Knockout
 
 include("ui.jl")
 include(joinpath("..", "build", "build_script.jl"))
