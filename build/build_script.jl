@@ -37,12 +37,8 @@ function build_cs_binary(build_path=pwd())
     julia_path = joinpath(split(string(Base.julia_cmd()))[1][2:end])
 
     if Sys.isapple()
-        @show build_path
         system_path = joinpath("Circuitscape.app", "Contents", "MacOS")
-        @show system_path
         bin_path = joinpath(build_path, system_path)
-        @show bin_path
-        @show julia_path
         run(`cp $julia_path $bin_path`)
         oldpwd = pwd()
         cd(bin_path)
@@ -51,6 +47,6 @@ function build_cs_binary(build_path=pwd())
     end
 
     build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, snoopfile = SNOOP_FILE,
-                     libraries = libraries, icns_file = joinpath(dir(CircuitscapeUI), "build", "circuitscape.icns"))
+                     libraries = libraries, icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"))
 
 end
