@@ -1,20 +1,18 @@
-using WebIO
 using Blink
-# import HttpParser
+using Tachyons
+using WebIO
+using InteractBase
+using InteractBulma
+using Circuitscape
 using CircuitscapeUI
-# import ApplicationBuilder.App: change_dir_if_bundle
-import MacroTools
-import MbedTLS
-import Tachyons
-import InteractBase
-import InteractBulma
-import WebIO
+using MbedTLS
+using Knockout
+using MacroTools
+using AssetRegistry
+using Distributed
 
 function change_dir_if_bundle()
-    # @show pwd()
-    # @show Base.julia_cmd()
     cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
-    # @show pwd()
 end
 
 # Blink 
@@ -25,37 +23,42 @@ Core.eval(Blink, :(resources = Dict("spinner.css" => "res/spinner.css",
                                "blink.js" => "res/blink.js", 
                                "blink.css" => "res/blink.css", 
                                "reset.css" => "res/reset.css")))
+Core.eval(WebIO, :(webiosetup = "webio_setup.js"))
 
 # Mbedtls
 Core.eval(MbedTLS, :(libmbedcrypto = "../Libraries/libmbedcrypto"))
 Core.eval(MbedTLS, :(libmbedtls = "../Libraries/libmbedtls"))
 Core.eval(MbedTLS, :(libmbedx509 = "../Libraries/libmbedx509"))
 
-# HttpParser
-# eval(HttpParser, :(lib = "Libraries/libhttp_parser.dylib"))
-
 # Tachyons
 Core.eval(Tachyons, :(path = "tachyons.min.css"))
 
 # WebIO
 Core.eval(WebIO, :(bundlepath = "bundle.js"))
-Core.eval(WebIO, :(blinksetup = "blink_setup.js"))
+# Core.eval(WebIO, :(blinksetup = "blink_setup.js"))
 
 # InteractBase
+Core.eval(InteractBase, :(font_awesome = "all.js"))
+Core.eval(InteractBase, :(style_css = "style.css"))
+
+# InteractBulma
 Core.eval(InteractBulma, :(all_js = "all.js"))
 Core.eval(InteractBulma, :(bulma_min_css = "bulma.min.css"))
 Core.eval(InteractBulma, :(bulma_slider_min_css = "bulma-slider.min.css"))
 Core.eval(InteractBulma, :(bulma_switch_min_css = "bulma-switch.min.css"))
 Core.eval(InteractBulma, :(bulma_checkradio_min_css = "bulma-checkradio.min.css"))
+Core.eval(InteractBulma, :(bulma_tooltip_min_css = "bulma-tooltip.min.css"))
+Core.eval(InteractBulma, :(bulma_accordion_min_css = "bulma-accordion.min.css"))
 
-# Vue 
-# eval(Vue, :(vue_js = "Resources/vue.js"))
+# Knockout 
+Core.eval(Knockout, :(knockout_js = "knockout.js"))
+Core.eval(Knockout, :(knockout_punches_js = "knockout_punches.js"))
 
 # CircuitscapeUI
 Core.eval(CircuitscapeUI, :(TESTPATH = "test/"))
 Core.eval(CircuitscapeUI, :(logo = "cs_logo.ico"))
 
-## MacroTools
+# MacroTools
 Core.eval(MacroTools, :(animals_file = "animals.txt"))
 
 Base.@ccallable function julia_main(args::Vector{String})::Cint
@@ -63,17 +66,9 @@ Base.@ccallable function julia_main(args::Vector{String})::Cint
     # change_dir_if_bundle()
     @show pwd()
     @show Blink.AtomShell._electron
-    @show Tachyons.path
     @show WebIO.bundlepath
-    @show WebIO.blinksetup
-    # @show HttpParser.lib
-    @show InteractBulma.bulma_min_css
-    # @show Vue.vue_js
-    @show InteractBulma.all_js
-    @show InteractBulma.bulma_slider_min_css
-    @show InteractBulma.bulma_switch_min_css
-    @show InteractBulma.bulma_checkradio_min_css
-    @show MacroTools.animals_file
+    @show InteractBulma.bulma_tooltip_min_css
+    @show InteractBulma.bulma_accordion_min_css
     w = CircuitscapeUI.run_ui()
     @show AssetRegistry.registry
     while Blink.active(w)
