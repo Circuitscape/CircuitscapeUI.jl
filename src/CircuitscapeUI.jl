@@ -12,6 +12,7 @@ using Distributed
 using CSSUtil
 using JSExpr
 using AssetRegistry
+using MacroTools
 
 include("ui.jl")
 

@@ -32,8 +32,12 @@ function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
     libs = readdir(joinpath(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "lib"))
     lib_paths = joinpath.(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "lib", libs)
 
+    electron_app = joinpath(dir(CircuitscapeUI.Blink), "deps/Julia.app")
+    if !ispath(electron_app)
+        CircuitscapeUI.Blink.AtomShell.install()
+    end
     libraries = vcat(
-                     joinpath(dir(CircuitscapeUI.Blink), "deps/Julia.app"), 
+                     electron_app,
                      lib_paths
                     )
 
