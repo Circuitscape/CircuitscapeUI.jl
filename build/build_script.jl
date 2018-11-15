@@ -39,11 +39,9 @@ function build_cs_binary(; build_path=pwd(), snoop = false)
     if Sys.isapple()
         system_path = joinpath("Circuitscape.app", "Contents", "MacOS")
         bin_path = joinpath(build_path, system_path)
+        mkpath(bin_path, mode=0o755)
         run(`cp $julia_path $bin_path`)
-        oldpwd = pwd()
-        cd(bin_path)
-        run(`install_name_tool -rpath '@executable_path/../lib' '@executable_path' julia`)
-        cd(oldpwd)
+        run(Cmd(`install_name_tool -rpath '@executable_path/../lib' '@executable_path' julia`, dir=bin_path))
     end
 
     if snoop
