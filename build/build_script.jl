@@ -1,3 +1,6 @@
+using ApplicationBuilder
+using CircuitscapeUI
+
 dir(mod) = normpath(joinpath(dirname(pathof(mod)),".."))
 const BUILD_FILE = joinpath(dir(CircuitscapeUI), "build", "Circuitscape.jl")
 const SNOOP_FILE = joinpath(dir(CircuitscapeUI), "build", "snoop.jl")
@@ -5,32 +8,32 @@ const SNOOP_FILE = joinpath(dir(CircuitscapeUI), "build", "snoop.jl")
 function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
 
     resources = [ 
-                 joinpath(dir(Blink), "src", "AtomShell", "main.js"), 
-                 joinpath(dir(Blink), "src", "content", "main.html"), 
-                 joinpath(dir(Blink), "res"), 
-                 joinpath(dir(Blink), "res", "webio_setup.js"),
-                 joinpath(dir(Tachyons), "assets", "tachyons.min.css"), 
-                 joinpath(dir(WebIO), "assets", "webio", "dist", "bundle.js"), 
-                 joinpath(dir(InteractBase), "assets", "all.js"), 
-                 joinpath(dir(InteractBase), "assets", "style.css"), 
-                 joinpath(dir(InteractBulma), "assets", "main.css"),
-                 joinpath(dir(InteractBulma), "assets", "bulma.min.css"),
-                 joinpath(dir(InteractBulma), "assets", "bulma-slider.min.css"),
-                 joinpath(dir(InteractBulma), "assets", "bulma-switch.min.css"),
-                 joinpath(dir(InteractBulma), "assets", "bulma-checkradio.min.css"),
-                 joinpath(dir(InteractBulma), "assets", "bulma-tooltip.min.css"),
-                 joinpath(dir(InteractBulma), "assets", "bulma-accordion.min.css"),
-                 joinpath(dir(Knockout), "assets", "knockout.js"),
-                 joinpath(dir(Knockout), "assets", "knockout_punches.js"),
-                 joinpath(dir(Circuitscape), "test"), 
+                 joinpath(dir(CircuitscapeUI.Blink), "src", "AtomShell", "main.js"), 
+                 joinpath(dir(CircuitscapeUI.Blink), "src", "content", "main.html"), 
+                 joinpath(dir(CircuitscapeUI.Blink), "res"), 
+                 joinpath(dir(CircuitscapeUI.Blink), "res", "webio_setup.js"),
+                 joinpath(dir(CircuitscapeUI.Tachyons), "assets", "tachyons.min.css"), 
+                 joinpath(dir(CircuitscapeUI.WebIO), "assets", "webio", "dist", "bundle.js"), 
+                 joinpath(dir(CircuitscapeUI.InteractBase), "assets", "all.js"), 
+                 joinpath(dir(CircuitscapeUI.InteractBase), "assets", "style.css"), 
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "main.css"),
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "bulma.min.css"),
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "bulma-slider.min.css"),
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "bulma-switch.min.css"),
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "bulma-checkradio.min.css"),
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "bulma-tooltip.min.css"),
+                 joinpath(dir(CircuitscapeUI.InteractBulma), "assets", "bulma-accordion.min.css"),
+                 joinpath(dir(CircuitscapeUI.Knockout), "assets", "knockout.js"),
+                 joinpath(dir(CircuitscapeUI.Knockout), "assets", "knockout_punches.js"),
+                 joinpath(dir(CircuitscapeUI.Circuitscape), "test"), 
                  joinpath(dir(CircuitscapeUI), "assets", "cs_logo.ico")
                 ]
 
-    libs = readdir(joinpath(dir(MbedTLS), "deps", "usr", "lib"))
-    lib_paths = joinpath.(dir(MbedTLS), "deps", "usr", "lib", libs)
+    libs = readdir(joinpath(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "lib"))
+    lib_paths = joinpath.(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "lib", libs)
 
     libraries = vcat(
-                     joinpath(dir(Blink), "deps/Julia.app"), 
+                     joinpath(dir(CircuitscapeUI.Blink), "deps/Julia.app"), 
                      lib_paths
                     )
 
