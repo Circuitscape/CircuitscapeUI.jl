@@ -2,7 +2,7 @@ dir(mod) = normpath(joinpath(dirname(pathof(mod)),".."))
 const BUILD_FILE = joinpath(dir(CircuitscapeUI), "build", "Circuitscape.jl")
 const SNOOP_FILE = joinpath(dir(CircuitscapeUI), "build", "snoop.jl")
 
-function build_cs_binary(; build_path=pwd(), snoop = false)
+function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
 
     resources = [ 
                  joinpath(dir(Blink), "src", "AtomShell", "main.js"), 
@@ -45,11 +45,20 @@ function build_cs_binary(; build_path=pwd(), snoop = false)
     end
 
     if snoop
-        build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, snoopfile = SNOOP_FILE,
-                     libraries = libraries, icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"))
+        build_app_bundle(BUILD_FILE,
+            resources = resources,
+            builddir = build_path,
+            snoopfile = SNOOP_FILE,
+            libraries = libraries,
+            icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"),
+            verbose = verbose)
     else
-        build_app_bundle(BUILD_FILE, resources = resources, builddir = build_path, 
-                     libraries = libraries, icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"))
+        build_app_bundle(BUILD_FILE,
+            resources = resources,
+            builddir = build_path,
+            libraries = libraries,
+            icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"),
+            verbose = verbose)
     end
 
 end
