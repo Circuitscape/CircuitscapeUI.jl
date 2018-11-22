@@ -1,6 +1,5 @@
 module CircuitscapeUI
 
-using ApplicationBuilder
 using Blink
 using Tachyons
 using WebIO
@@ -13,9 +12,9 @@ using Distributed
 using CSSUtil
 using JSExpr
 using AssetRegistry
+using MacroTools
 
 include("ui.jl")
-include(joinpath("..", "build", "build_script.jl"))
 
 export run_ui
 
