@@ -58,9 +58,6 @@ Core.eval(CircuitscapeUI.Knockout, :(knockout_punches_js = "knockout_punches.js"
 Core.eval(CircuitscapeUI, :(TESTPATH = "test/"))
 Core.eval(CircuitscapeUI, :(logo = "cs_logo.ico"))
 
-# MacroTools
-Core.eval(CircuitscapeUI.MacroTools, :(animals_file = "animals.txt"))
-
 Base.@ccallable function julia_main(args::Vector{String})::Cint
     # ApplicationBuilder.App.change_dir_if_bundle()
     # change_dir_if_bundle()
