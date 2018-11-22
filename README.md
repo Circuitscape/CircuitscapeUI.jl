@@ -1,8 +1,8 @@
 # CircuitscapeUI.jl
 
-This package contains the UI code and build scripts for Circuitscape. To install this utility, do: 
+This package contains the UI code and build scripts for Circuitscape. To install this utility, do:
 ```julia
-] dev https://github.com/ranjanan/CircuitscapeUI.jl.git
+] add https://github.com/Circuitscape/CircuitscapeUI.jl
 ```
 
 To run the UI, do:
@@ -11,11 +11,15 @@ using CircuitscapeUI
 run_ui()
 ```
 
-To run the build script, you will need the branch `webio` from [this fork](https://github.com/ranjanan/Blink.jl) of Blink.jl 
-and the branch `blink` from [`WebIO.jl`](https://github.com/JuliaGizmos/WebIO.jl). Then: 
+To run the build script, First run
+```bash
+$ CIRCUITSCAPEUI=$(julia -e 'using CircuitscapeUI; print(joinpath(dirname(pathof(CircuitscapeUI)), ".."))')
+$ JULIA_PROJECT=$CIRCUITSCAPEUI julia
+```
+and then in Julia
 ```julia
-using CircuitscapeUI
-CircuitscapeUI.build_cs_binary(; build_path = pwd(), 
+julia> include(joinpath(ENV["JULIA_PROJECT"], "build", "build_script.jl"))
+CircuitscapeUI.build_cs_binary(; build_path = pwd(),
                                  snoop = false) # snoop = true takes longer but removes most JIT overhead
 ```
 

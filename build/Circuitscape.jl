@@ -1,15 +1,4 @@
-# using Blink
-# using Tachyons
-# using WebIO
-# using InteractBase
-# using InteractBulma
-# using Circuitscape
 using CircuitscapeUI
-# using MbedTLS
-# using Knockout
-# using MacroTools
-# using AssetRegistry
-# using Distributed
 
 function change_dir_if_bundle()
     cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
