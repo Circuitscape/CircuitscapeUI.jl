@@ -12,7 +12,7 @@ Core.eval(CircuitscapeUI.Blink, :(resources = Dict("spinner.css" => "res/spinner
                                "blink.js" => "res/blink.js", 
                                "blink.css" => "res/blink.css", 
                                "reset.css" => "res/reset.css")))
-Core.eval(CircuitscapeUI.WebIO, :(webiosetup = "webio_setup.js"))
+Core.eval(CircuitscapeUI.Blink, :(webiosetup = "webio_setup.js"))
 
 # Mbedtls
 Core.eval(CircuitscapeUI.MbedTLS, :(libmbedcrypto = "../Libraries/libmbedcrypto"))
@@ -24,14 +24,13 @@ Core.eval(CircuitscapeUI.Tachyons, :(path = "tachyons.min.css"))
 
 # WebIO
 Core.eval(CircuitscapeUI.WebIO, :(bundlepath = "bundle.js"))
-# Core.eval(WebIO, :(blinksetup = "blink_setup.js"))
 
 # InteractBase
 Core.eval(CircuitscapeUI.InteractBase, :(font_awesome = "all.js"))
 Core.eval(CircuitscapeUI.InteractBase, :(style_css = "style.css"))
 
 # InteractBulma
-Core.eval(CircuitscapeUI.InteractBulma, :(all_js = "all.js"))
+Core.eval(CircuitscapeUI.InteractBulma, :(font_awesome = "all.js"))
 Core.eval(CircuitscapeUI.InteractBulma, :(bulma_min_css = "bulma.min.css"))
 Core.eval(CircuitscapeUI.InteractBulma, :(bulma_slider_min_css = "bulma-slider.min.css"))
 Core.eval(CircuitscapeUI.InteractBulma, :(bulma_switch_min_css = "bulma-switch.min.css"))
