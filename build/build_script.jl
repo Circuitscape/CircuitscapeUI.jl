@@ -4,6 +4,7 @@ using CircuitscapeUI
 dir(mod) = normpath(joinpath(dirname(pathof(mod)),".."))
 const BUILD_FILE = joinpath(dir(CircuitscapeUI), "build", "Circuitscape.jl")
 const SNOOP_FILE = joinpath(dir(CircuitscapeUI), "build", "snoop.jl")
+const BINDIR = Sys.BINDIR
 
 function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
 
@@ -32,7 +33,11 @@ function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
     libs = readdir(joinpath(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "lib"))
     lib_paths = joinpath.(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "lib", libs)
 
-    electron_app = joinpath(dir(CircuitscapeUI.Blink), "deps/Julia.app")
+    if Sys.isapple()
+    	electron_app = joinpath(dir(CircuitscapeUI.Blink), "deps/Julia.app")
+    elseif Sys.iswindows()
+    	electron_app = joinpath(dir(CircuitscapeUI.Blink), "deps", "atom")
+    end
     if !ispath(electron_app)
         CircuitscapeUI.Blink.AtomShell.install()
     end
@@ -63,9 +68,9 @@ function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
         build_app_bundle(BUILD_FILE,
             resources = resources,
             builddir = build_path,
-            libraries = libraries,
-            icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"),
-            verbose = verbose)
+            libraries = libraries)
+            #icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"),
+            #verbose = verbose)
     end
 
 end
