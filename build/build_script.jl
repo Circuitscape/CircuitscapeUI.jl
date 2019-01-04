@@ -6,7 +6,7 @@ const BUILD_FILE = joinpath(dir(CircuitscapeUI), "build", "Circuitscape.jl")
 const SNOOP_FILE = joinpath(dir(CircuitscapeUI), "build", "snoop.jl")
 const BINDIR = Sys.BINDIR
 
-function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
+function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false, installer = false, name = "Circuitscape")
 
     resources = [ 
                  joinpath(dir(CircuitscapeUI.Blink), "src", "AtomShell", "main.js"), 
@@ -45,15 +45,34 @@ function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
                      electron_app,
                      lib_paths
                     )
+    if Sys.iswindows()
+    	libs = readdir(joinpath(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "bin"))
+    	append!(libraries, joinpath.(dir(CircuitscapeUI.MbedTLS), "deps", "usr", "bin", libs))
+    end
 
     julia_path = joinpath(split(string(Base.julia_cmd()))[1][2:end])
 
     if Sys.isapple()
+
         system_path = joinpath("Circuitscape.app", "Contents", "MacOS")
         bin_path = joinpath(build_path, system_path)
         mkpath(bin_path, mode=0o755)
         run(`cp $julia_path $bin_path`)
         run(Cmd(`install_name_tool -rpath '@executable_path/../lib' '@executable_path' julia`, dir=bin_path))
+
+    elseif Sys.iswindows()
+
+    	bin_path = joinpath(Sys.BINDIR, "julia.exe")
+    	app_path = joinpath(build_path, name, "core")
+    	mkpath(app_path, mode=0o755)
+    	cp(bin_path, joinpath(app_path, "julia.exe"), force=true)
+
+    end
+
+    if Sys.isapple()
+    	icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns")
+    else 
+    	icns_file = joinpath(dir(CircuitscapeUI), "assets", "cs_logo.ico")
     end
 
     if snoop
@@ -61,16 +80,20 @@ function build_cs_binary(; build_path=pwd(), snoop = false, verbose = false)
             resources = resources,
             builddir = build_path,
             snoopfile = SNOOP_FILE,
+            create_installer = installer,
             libraries = libraries,
-            icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"),
+            appname = name, 
+            icns_file = icns_file,
             verbose = verbose)
     else
         build_app_bundle(BUILD_FILE,
             resources = resources,
             builddir = build_path,
-            libraries = libraries)
-            #icns_file = joinpath(dir(CircuitscapeUI), "assets", "circuitscape.icns"),
-            #verbose = verbose)
+            libraries = libraries, 
+            create_installer = installer,
+            appname = name,
+            icns_file = icns_file,
+            verbose = verbose)
     end
 
 end

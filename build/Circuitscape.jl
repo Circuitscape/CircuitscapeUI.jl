@@ -1,7 +1,11 @@
 using CircuitscapeUI
 
 function change_dir_if_bundle()
-    cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
+    if Sys.isapple()
+        cd(joinpath(split(string(Base.julia_cmd()))[1][2:end], ".."))
+    elseif Sys.iswindows()
+        cd(joinpath(split(string(Base.julia_cmd()))[1][2:end][2:end-1], ".."))
+    end
 end
 
 append_res(x) = joinpath("res", x)
@@ -54,53 +58,54 @@ if Sys.isapple()
 
 elseif Sys.iswindows()
 
-    Core.eval(CircuitscapeUI.Blink.AtomShell, :(_electron = joinpath("..", "lib", "atom", "electron.exe")))
-    Core.eval(CircuitscapeUI.Blink.AtomShell, :(mainjs = joinpath("..", "res", "main.js")))
-    Core.eval(CircuitscapeUI.Blink, :(mainhtml = joinpath("..", "res", "main.html")))
-    Core.eval(CircuitscapeUI.Blink, :(resources = Dict("spinner.css" => joinpath("..", "res", "res", "spinner.css"), 
-                                   "blink.js" => joinpath("..", "res", "res", "blink.js"), 
-                                   "blink.css" => joinpath("..", "res", "res","blink.css"), 
-                                   "reset.css" => joinpath("..", "res", "res","reset.css"))))
-    Core.eval(CircuitscapeUI.Blink, :(webiosetup = joinpath("..", "res", "webio_setup.js")))
+    Core.eval(CircuitscapeUI.Blink.AtomShell, :(_electron = normpath(joinpath("..", "lib", "atom", "electron.exe"))))
+    Core.eval(CircuitscapeUI.Blink.AtomShell, :(mainjs = normpath(joinpath("..", "res", "main.js"))))
+    Core.eval(CircuitscapeUI.Blink, :(mainhtml = joinpath("..", "res", "main.html") |> normpath))
+    Core.eval(CircuitscapeUI.Blink, :(resources = Dict("spinner.css" => joinpath("..", "res", "res", "spinner.css") |> normpath, 
+                                   "blink.js" => joinpath("..", "res", "res", "blink.js") |> normpath, 
+                                   "blink.css" => joinpath("..", "res", "res","blink.css") |> normpath, 
+                                   "reset.css" => joinpath("..", "res", "res","reset.css") |> normpath)))
+    Core.eval(CircuitscapeUI.Blink, :(webiosetup = joinpath("..", "res", "webio_setup.js")|> normpath))
 
     # Mbedtls
-    Core.eval(CircuitscapeUI.MbedTLS, :(libmbedcrypto = joinpath("..", "lib", "libmbedcrypto")))
-    Core.eval(CircuitscapeUI.MbedTLS, :(libmbedtls = joinpath("..", "lib", "libmbedtls")))
-    Core.eval(CircuitscapeUI.MbedTLS, :(libmbedx509 = joinpath("..", "lib", "libmbedx509")))
+    Core.eval(CircuitscapeUI.MbedTLS, :(libmbedcrypto = joinpath("..", "lib", "libmbedcrypto") |> normpath))
+    Core.eval(CircuitscapeUI.MbedTLS, :(libmbedtls = joinpath("..", "lib", "libmbedtls") |> normpath))
+    Core.eval(CircuitscapeUI.MbedTLS, :(libmbedx509 = joinpath("..", "lib", "libmbedx509") |> normpath ))
 
     # Tachyons
-    Core.eval(CircuitscapeUI.Tachyons, :(path = joinpath("..", "res", "tachyons.min.css")))
+    Core.eval(CircuitscapeUI.Tachyons, :(path = joinpath("..", "res", "tachyons.min.css") |> normpath))
 
     # WebIO
-    Core.eval(CircuitscapeUI.WebIO, :(bundlepath = joinpath("..", "res", "bundle.js")))
+    Core.eval(CircuitscapeUI.WebIO, :(bundlepath = joinpath("..", "res", "bundle.js") |> normpath))
 
     # InteractBase
-    Core.eval(CircuitscapeUI.InteractBase, :(font_awesome = joinpath("..", "res", "all.js")))
-    Core.eval(CircuitscapeUI.InteractBase, :(style_css = joinpath("..", "res", "style.css")))
+    Core.eval(CircuitscapeUI.InteractBase, :(font_awesome = joinpath("..", "res", "all.js") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBase, :(style_css = joinpath("..", "res", "style.css") |> normpath))
 
     # InteractBulma
-    Core.eval(CircuitscapeUI.InteractBulma, :(font_awesome = joinpath("..", "res", "all.js")))
-    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_min_css = joinpath("..", "res", "bulma.min.css")))
-    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_slider_min_css = joinpath("..", "res", "bulma-slider.min.css")))
-    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_switch_min_css = joinpath("..", "res", "bulma-switch.min.css")))
-    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_checkradio_min_css = joinpath("..", "res", "bulma-checkradio.min.css")))
-    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_tooltip_min_css = joinpath("..", "res", "bulma-tooltip.min.css")))
-    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_accordion_min_css = joinpath("..", "res", "bulma-accordion.min.css")))
+    Core.eval(CircuitscapeUI.InteractBulma, :(font_awesome = joinpath("..", "res", "all.js") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_min_css = joinpath("..", "res", "bulma.min.css") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_slider_min_css = joinpath("..", "res", "bulma-slider.min.css") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_switch_min_css = joinpath("..", "res", "bulma-switch.min.css") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_checkradio_min_css = joinpath("..", "res", "bulma-checkradio.min.css") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_tooltip_min_css = joinpath("..", "res", "bulma-tooltip.min.css") |> normpath))
+    Core.eval(CircuitscapeUI.InteractBulma, :(bulma_accordion_min_css = joinpath("..", "res", "bulma-accordion.min.css") |> normpath))
 
     # Knockout
-    Core.eval(CircuitscapeUI.Knockout, :(knockout_js = joinpath("..", "res", "knockout.js")))
-    Core.eval(CircuitscapeUI.Knockout, :(knockout_punches_js = joinpath("..", "res", "knockout_punches.js")))
+    Core.eval(CircuitscapeUI.Knockout, :(knockout_js = joinpath("..", "res", "knockout.js") |> normpath))
+    Core.eval(CircuitscapeUI.Knockout, :(knockout_punches_js = joinpath("..", "res", "knockout_punches.js") |> normpath))
 
     # CircuitscapeUI
-    Core.eval(CircuitscapeUI, :(TESTPATH = joinpath("..", "res", "test")))
-    Core.eval(CircuitscapeUI, :(logo = joinpath("..", "res", "cs_logo.ico")))
+    Core.eval(CircuitscapeUI, :(TESTPATH = joinpath("..", "res", "test") |> normpath))
+    Core.eval(CircuitscapeUI, :(logo = joinpath("..", "res", "cs_logo.ico") |> normpath))
 end
 
 
 Base.@ccallable function julia_main(args::Vector{String})::Cint
     # ApplicationBuilder.App.change_dir_if_bundle()
-    # change_dir_if_bundle()
-    #@show pwd()
+    @show pwd()
+    change_dir_if_bundle()
+    @show pwd()
     @show CircuitscapeUI.Blink.AtomShell._electron
     @show CircuitscapeUI.Blink.AtomShell.mainjs
     @show CircuitscapeUI.Blink.mainhtml
