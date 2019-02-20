@@ -218,7 +218,8 @@ function generate_ui(w)
            compute(cfg)
            Blink.@js_ w alert("Run completed!")
        catch e
-           Blink.@js_ w alert("$e")
+           @show e
+           Blink.js(w, Blink.JSString("""alert("Error: $(e.msg)")"""), callback = false)
        end
 
     end
