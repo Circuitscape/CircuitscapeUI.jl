@@ -1,4 +1,5 @@
 using CircuitscapeUI
+using Circuitscape
 
 function change_dir_if_bundle()
     if Sys.isapple()
@@ -103,7 +104,6 @@ end
 
 Base.@ccallable function julia_main(args::Vector{String})::Cint
     # ApplicationBuilder.App.change_dir_if_bundle()
-    @show pwd()
     change_dir_if_bundle()
     @show pwd()
     @show CircuitscapeUI.Blink.AtomShell._electron
@@ -114,28 +114,17 @@ Base.@ccallable function julia_main(args::Vector{String})::Cint
     @show CircuitscapeUI.InteractBulma.bulma_accordion_min_css 
     @show CircuitscapeUI.Blink.resources
     @show CircuitscapeUI.Blink.webiosetup
+    if length(args) > 0
+        Circuitscape.compute(args[1])
     # CircuitscapeUI.WebIO.setup(:blink)
     #@show CircuitscapeUI.WebIO.providers_initialised
-    w = CircuitscapeUI.run_ui()
-    #println("boss")
-    # w = CircuitscapeUI.Blink.Window()
-    #@show CircuitscapeUI.AssetRegistry.registry    
-    # wait(w.content)
-    # CircuitscapeUI.Blink.tools(w)
-    # return w
-    #@show CircuitscapeUI.WebIO.providers_initialised
-    #println("boss")
-
-    # CircuitscapeUI.Blink.body!(w, CircuitscapeUI.WebIO.node(:div, "hello world!"))
-    #println("boss")
-
-    # CircuitscapeUI.Blink.body!(w,  "hello world!")
-    #@show CircuitscapeUI.WebIO.providers_initialised
-
+    else
     #CircuitscapeUI.Blink.tools(w)
-    @show CircuitscapeUI.AssetRegistry.registry
-    while CircuitscapeUI.Blink.active(w)
-        sleep(0.01)
+        w = CircuitscapeUI.run_ui()
+        @show CircuitscapeUI.AssetRegistry.registry
+        while CircuitscapeUI.Blink.active(w)
+            sleep(0.01)
+        end
     end
     return 0
 end
